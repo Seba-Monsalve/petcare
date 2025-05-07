@@ -9,7 +9,8 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
-import { Navbar } from "./Navbar";
+import { Navbar } from "../../components/Navbar";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -45,20 +46,18 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              <div className="flex items-center justify-center">
-                {/* <Image
-                  src="/placeholder.svg?height=550&width=550"
-                  width={550}
-                  height={550}
+              <div className="flex items-center justify-center ">
+                <img
+                  src="./src/assets/images/home_img.png"
                   alt="Perro y gato felices"
-                  className="rounded-lg object-cover"
-                /> */}
+                  className="rounded-2xl object-cover shadow-md"
+                />
               </div>
             </div>
           </div>
         </section>
 
-        <section
+        {/* <section
           id="features"
           className="w-full py-6 md:py-12 lg:py-16 bg-muted"
         >
@@ -117,7 +116,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
@@ -175,7 +174,7 @@ export default function Home() {
 
         <section
           id="testimonials"
-          className="w-full py-12 md:py-24 lg:py-32 bg-muted"
+          className="w-full py-8 md:py-16 lg:py-24 bg-muted"
         >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -236,7 +235,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-
+        {/* 
         <section id="register" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
@@ -366,11 +365,11 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         <section
           id="contact"
-          className="w-full py-12 md:py-24 lg:py-32 bg-muted"
+          className="w-full py-8 md:py-16 lg:py-24 bg-muted"
         >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -422,37 +421,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer className="w-full border-t bg-background">
-        <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
-          <div className="flex items-center gap-2">
-            <Paw className="h-6 w-6 text-rose-500" />
-            <span className="text-lg font-bold">PetCare</span>
-          </div>
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © {new Date().getFullYear()} PetCare. Todos los derechos reservados.
-          </p>
-          <div className="flex gap-4">
-            <Link
-              to="#"
-              className="text-sm text-muted-foreground underline underline-offset-4"
-            >
-              Términos
-            </Link>
-            <Link
-              to="#"
-              className="text-sm text-muted-foreground underline underline-offset-4"
-            >
-              Privacidad
-            </Link>
-            <Link
-              to="#"
-              className="text-sm text-muted-foreground underline underline-offset-4"
-            >
-              Cookies
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
