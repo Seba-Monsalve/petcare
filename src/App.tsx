@@ -1,9 +1,7 @@
+import AppRouter from "./AppRouter";
+
 function App() {
-  return (
-    <>
-      <div className="text-2xl">hola mudn</div>
-    </>
-  );
+  return <AppRouter />;
 }
 
 export default App;
