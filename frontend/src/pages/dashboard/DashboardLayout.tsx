@@ -48,7 +48,7 @@ export default function DashboardLayout() {
                 Dashboard
               </Button>
             </Link> */}
-            <Link to="/dashboard/pets">
+            <Link to="/dashboard/">
               <Button variant="ghost" className="w-full justify-start">
                 <PawPrintIcon className="mr-2 h-5 w-5" />
                 Mis Mascotas
@@ -68,7 +68,7 @@ export default function DashboardLayout() {
             </Link>
           </div>
         </aside>
-        <main className="flex-1 p-6">
+        <main className="flex-1 ">
           <div className="mx-auto max-w-5xl">
             <Outlet />
           </div>

@@ -32,6 +32,8 @@ export function RegisterForm() {
   });
 
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
+    console.log("values", values);
+
     await signUp({ ...values });
     if (error) {
       toast.error(error);

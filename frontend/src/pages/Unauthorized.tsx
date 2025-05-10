@@ -20,7 +20,7 @@ export const Unauthorized = () => {
           variant={"default"}
           className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-md"
         >
-          Regresar a la página de inicio
+          Regresar al home... sano y salvo
         </Button>
       </div>
     </div>

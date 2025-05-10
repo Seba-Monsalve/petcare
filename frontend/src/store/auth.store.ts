@@ -1,4 +1,4 @@
-import { User } from "@/interfaces/user.interface";
+import { User } from "@/auth/interfaces/user.interface";
 import axios from "axios";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
