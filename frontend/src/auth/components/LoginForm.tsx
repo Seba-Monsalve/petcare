@@ -69,6 +69,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
+
         <Button type="submit" className="bg-rose-500">
           Ingresar
         </Button>

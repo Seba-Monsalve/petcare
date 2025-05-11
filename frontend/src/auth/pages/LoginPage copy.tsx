@@ -39,10 +39,7 @@ export default function LoginPage2() {
 
     setLoading(true);
 
-    // Simulación de inicio de sesión
     setTimeout(() => {
-      // En una aplicación real, aquí se haría la llamada a la API
-      // Para esta demo, simplemente verificamos si hay un usuario registrado
       const user = localStorage.getItem("user");
 
       if (user) {

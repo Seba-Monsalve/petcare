@@ -1,4 +1,4 @@
-import { PetForm } from "../components/PetForm";
+import { AddPetForm } from "../components/AddPetForm";
 
 export const AddPetPage = () => {
   return (
@@ -8,7 +8,7 @@ export const AddPetPage = () => {
         Completa el formulario para agregar una nueva mascota.
       </p>
       <div className=" flex flex-row  mt-4 w-full">
-        <PetForm />
+        <AddPetForm />
       </div>
     </div>
   );

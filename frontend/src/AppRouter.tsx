@@ -7,7 +7,7 @@ import { PrivateRoute } from "./auth/routes/PrivateRoute";
 import { useAuthStore } from "./store/auth.store";
 import { Unauthorized } from "./pages/Unauthorized";
 import PetsPage from "./pets/pages/PetsPage";
-import { AddPetPage } from "./pets/pages";
+import { AddPetPage, PetPage } from "./pets/pages";
 
 function AppRouter() {
   const { user } = useAuthStore();
@@ -28,6 +28,7 @@ function AppRouter() {
         >
           <Route index path="/dashboard" element={<PetsPage />} />
           <Route path="/dashboard/pets/new" element={<AddPetPage />} />
+          <Route path="/dashboard/pets/:id" element={<PetPage />} />
           <Route path="/dashboard/vets" element={<h1>vets</h1>} />
         </Route>
         <Route path="/pitbull" element={<Unauthorized />} />

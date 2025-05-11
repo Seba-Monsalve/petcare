@@ -9,6 +9,7 @@ interface PetState {
   error: null | string;
   message: null | string;
   fetchPets: ({ userId }: { userId: string }) => void;
+  getPetById: (petId: string) => Promise<Pet | undefined>;
   addPet: (pet: any) => void;
   updatePet: (pet: any) => void;
   deletePet: (petId: string) => void;
@@ -46,12 +47,10 @@ export const usePetStore = create<PetState>()(
           });
         }
       },
-      addPet: async (pet: Pet) => {
+      addPet: async (pet: any) => {
         set({ isLoading: true, message: null, error: null });
         try {
-          const res = await petApi.post(`pets/add`, {
-            data: { ...pet },
-          });
+          const res = await petApi.post(`pets/add`, pet);
 
           if (!res.data.ok) {
             set({ pets: [], isLoading: false, message: res.data.message });
@@ -74,7 +73,7 @@ export const usePetStore = create<PetState>()(
         const { id, ...rest } = pet;
         set({ isLoading: true, message: null, error: null });
         try {
-          const res = await petApi.put(`pets/update/${id}`, pet);
+          const res = await petApi.patch(`pets/update/${id}`, pet);
 
           if (!res.data.ok) {
             set({ pets: [], isLoading: false, message: res.data.message });
@@ -94,9 +93,40 @@ export const usePetStore = create<PetState>()(
         }
       },
       deletePet: async (petId: string) => {
+        console.log("Deleting pet with id: ", petId);
         set({ isLoading: true, message: null, error: null });
         try {
           const res = await petApi.delete(`pets/delete/${petId}`);
+          console.log(res);
+          if (!res.data.ok) {
+            set((state) => ({
+              pets: state.pets,
+              isLoading: false,
+              message: res.data.message,
+            }));
+            return;
+          }
+          console.log("asd");
+          set((state) => ({
+            pets: state.pets.filter((pet) => pet.id !== petId),
+            isLoading: false,
+            message: res.data.message,
+          }));
+          console.log("asd");
+          return;
+        } catch (error) {
+          console.log((error as any).response.data.message);
+          set({
+            isLoading: false,
+            error: "Error deleting pet",
+          });
+        }
+      },
+
+      getPetById: async (petId: string) => {
+        set({ isLoading: true, message: null, error: null });
+        try {
+          const res = await petApi.get(`pets/${petId}`);
 
           if (!res.data.ok) {
             set((state) => ({
@@ -111,15 +141,18 @@ export const usePetStore = create<PetState>()(
             isLoading: false,
             message: res.data.message,
           }));
+          return res.data.pet;
         } catch (error) {
           console.log((error as any).response.data.message);
           set({
             isLoading: false,
             error: "Error deleting pet",
           });
+          return;
         }
       },
     }),
+
     {
       name: "pets-storage", // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used

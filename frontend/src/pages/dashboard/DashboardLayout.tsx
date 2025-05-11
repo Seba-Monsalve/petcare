@@ -69,7 +69,7 @@ export default function DashboardLayout() {
           </div>
         </aside>
         <main className="flex-1 ">
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto py-2  max-w-5xl">
             <Outlet />
           </div>
         </main>

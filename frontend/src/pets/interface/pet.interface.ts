@@ -7,4 +7,10 @@ export interface Pet {
   sterilized: boolean;
   breed: string;
   urlImage?: string;
+  dob: Date;
+  isActive: boolean;
+  owner: {
+    username: string;
+    email: string;
+  };
 }

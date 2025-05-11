@@ -1,2 +1,3 @@
-export * from './AddPetPage';
-export * from './PetsPage';
+export * from "./AddPetPage";
+export * from "./PetPage";
+export * from "./PetsPage";

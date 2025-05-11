@@ -13,4 +13,10 @@ export const addPetValidation = z.object({
     .min(1, { message: "Campo requerido" })
     .max(1000, { message: "El peso no puede ser mayor a 1000 kg" }),
   sterilized: z.boolean(),
+  dob_month: z.string({
+    message: "Campo requerido",
+  }),
+  dob_year: z.string({
+    message: "Campo requerido",
+  }),
 });
