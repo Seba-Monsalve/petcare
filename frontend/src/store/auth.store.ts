@@ -1,5 +1,5 @@
+import { userApi } from "@/api/user.api";
 import { User } from "@/auth/interfaces/user.interface";
-import axios from "axios";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -35,7 +35,7 @@ export const useAuthStore = create<StoreState>()(
       }) => {
         set({ isLoading: true, message: null, error: null });
         try {
-          const res = await axios.post(`api/auth/signup`, {
+          const res = await userApi.post(`auth/signup`, {
             username,
             email,
             password,
@@ -62,7 +62,7 @@ export const useAuthStore = create<StoreState>()(
       login: async ({ email, password }) => {
         set({ isLoading: true, message: null, error: null });
         try {
-          const res = await axios.post(`api/auth/login`, {
+          const res = await userApi.post(`auth/login`, {
             email,
             password,
           });
@@ -92,7 +92,7 @@ export const useAuthStore = create<StoreState>()(
       fetchUser: async () => {
         set({ isFetchingUser: true, message: null });
         try {
-          const res = await axios.get(`api/auth/fetch-user`);
+          const res = await userApi.get(`auth/fetch-user`);
 
           if (!res.data.ok) {
             set({
@@ -119,7 +119,7 @@ export const useAuthStore = create<StoreState>()(
       logout: async () => {
         set({ user: null, error: null, message: null, isLoading: true });
         try {
-          const res = await axios.post(`api/auth/logout`);
+          const res = await userApi.post(`auth/logout`);
           const { message } = res.data;
           set({ message, isLoading: false, user: null });
           return { message };

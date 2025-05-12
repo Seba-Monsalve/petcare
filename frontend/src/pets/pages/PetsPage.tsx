@@ -42,10 +42,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus, Search, Filter, ArrowUpDown, ListCollapse } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import { usePetStore } from "@/store/pet.store";
 import { differenceInMonths, differenceInYears } from "date-fns";
-import { useEffect } from "react";
 import { useAuthStore } from "@/store/auth.store";
+import { usePets } from "../hooks/";
+import { Loading } from "@/common/components/Loading";
+import { Pet } from "../interface/pet.interface";
+import { usePrefetchPet } from "../hooks/usePrefetchPet";
 
 // Datos de ejemplo para mascotas
 // const pets = [
@@ -132,18 +134,20 @@ import { useAuthStore } from "@/store/auth.store";
 // ];
 
 export default function PetsPage() {
-  const { pets, fetchPets } = usePetStore();
   const { user } = useAuthStore();
+
+  const { petsQuery } = usePets();
+
+  const { data: pets, isFetching } = petsQuery;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user) navigate("/login");
-    const fetchData = async () => {
-      await fetchPets({ userId: user!.id });
-    };
+  const prefetchPet = usePrefetchPet();
 
-    fetchData();
-  }, []);
+  console.log(pets);
+  console.log(isFetching);
+  if (isFetching) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col gap-6 py-2">
@@ -231,12 +235,13 @@ export default function PetsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {pets
-                    .filter((pet) => pet.isActive)
-                    .map((pet) => (
+                  {pets!
+                    .filter((pet: Pet) => pet.isActive)
+                    .map((pet: Pet) => (
                       <TableRow
                         key={pet.id}
                         className="hover:bg-gray-100 items-center"
+                        onMouseEnter={() => prefetchPet(pet.id)}
                       >
                         {/* <TableCell className="font-medium">{pet.id}</TableCell> */}
                         <TableCell>
@@ -265,7 +270,6 @@ export default function PetsPage() {
                         </TableCell>
                         <TableCell>{pet.species}</TableCell>
                         <TableCell>{pet.breed}</TableCell>
-                        {/* TODO: Cambiar a edad */}
                         <TableCell className="flex flex-col text-center items-center justify-center">
                           <span>
                             {differenceInYears(new Date(), new Date(pet.dob)) >

@@ -30,7 +30,6 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     const user = await login({ ...values });
-    console.log("values", values);
     if (error) {
       toast.error(error);
     } else {

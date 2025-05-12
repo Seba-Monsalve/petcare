@@ -6,21 +6,14 @@ import { Pet } from "../interface/pet.interface";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/common/components/Loading";
+import { usePet } from "../hooks";
 
 export const UpdatePetPage = () => {
   const { petId } = useParams();
-  const { getPetById, isLoading, error } = usePetStore();
-  const [pet, setPet] = useState<Pet | null>(null);
 
-  useEffect(() => {
-    const fetchData = async (petId: string) => {
-      const pet = await getPetById(petId);
-      if (pet) setPet(pet);
-    };
-    if (petId) fetchData(petId);
-  }, [petId]);
+  const { petQuery } = usePet(petId!);
 
-  if (!petId) return <div>petId de mascota no proporcionado</div>;
+  const { data: pet, isLoading, error } = petQuery;
 
   if (isLoading && !pet) return <Loading />;
   if (error || !pet) {

@@ -26,6 +26,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui";
+import { usePetMutation } from "../hooks/usePetMutation";
 
 export function AddPetForm() {
   const form = useForm<z.infer<typeof addPetValidation>>({
@@ -46,12 +47,16 @@ export function AddPetForm() {
   const { addPet, error } = usePetStore();
   const navigate = useNavigate();
 
+  const { createPetMutation } = usePetMutation();
+
   async function onSubmit(values: z.infer<typeof addPetValidation>) {
     const { weight, dob_month, dob_year, ...rest } = values;
 
     const dob = new Date(+dob_year, +dob_month);
     // usar el toast con promise
-    await addPet({ weight: +weight, dob, ...rest });
+    // await addPet({ weight: +weight, dob, ...rest });
+
+    createPetMutation.mutate({ weight: +weight, dob, ...rest });
     if (error) return toast.error(error);
     navigate("/dashboard");
     toast.success("Mascota agregada correctamente");

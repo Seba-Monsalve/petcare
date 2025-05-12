@@ -24,9 +24,9 @@ import { PetData } from "../data/pet.data";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui";
 import { Pet } from "../interface/pet.interface";
-import { usePetStore } from "@/store/pet.store";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { usePetMutation } from "../hooks/usePetMutation";
 
 export function UpdatePetForm({ pet }: { pet: Pet }) {
   const form = useForm<z.infer<typeof addPetValidation>>({
@@ -43,16 +43,20 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
       dob_year: pet.dob ? new Date(pet.dob).getFullYear().toString() : "",
     },
   });
-  const { updatePet, error } = usePetStore();
 
   const navigate = useNavigate();
+
+  const { updatePetMutation } = usePetMutation();
 
   async function onSubmit(values: z.infer<typeof addPetValidation>) {
     const { weight, dob_month, dob_year, ...rest } = values;
     const dob = new Date(+dob_year, +dob_month);
     // usar el toast con promise
-    await updatePet({ weight: +weight, dob, ...rest, id: pet.id });
-    if (error) return toast.error(error);
+    // await updatePet({ weight: +weight, dob, ...rest, id: pet.id });
+    updatePetMutation.mutate({
+      pet: { weight: +weight, dob, ...rest },
+      id: pet.id,
+    });
     navigate(`/dashboard/pets/${pet.id}`);
     toast.success("Mascota actualizada correctamente");
   }

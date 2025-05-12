@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -15,15 +14,12 @@ import {
   Plus,
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
-import { usePetStore } from "@/store/pet.store";
-import { Pet } from "../interface/pet.interface";
 import { differenceInMonths, differenceInYears } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage, Badge } from "@/components/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VaccinationHistory } from "../components/VaccinationHistory";
 import { MedicalHistory } from "../components/MedicalHistory.ts";
 import { months_ES } from "@/common/data/date.ts";
-import toast from "react-hot-toast";
 import { Loading } from "@/common/components/Loading.tsx";
 import {
   Popover,
@@ -32,82 +28,43 @@ import {
 } from "@/components/ui/popover.tsx";
 import { AddMedicalRecordForm } from "../components/AddMedicalRecordForm.tsx";
 import { AddVaccinationRecordForm } from "../components/AddVaccinationRecordForm.tsx";
+import { usePet, usePetMutation } from "../hooks/index.ts";
+import toast from "react-hot-toast";
 
 export const PetPage = () => {
-  const { getPetById, isLoading, deletePet, error } = usePetStore();
   const navigate = useNavigate();
   const { petId } = useParams();
-  const [pet, setPet] = useState<Pet>();
+  const { petQuery } = usePet(petId || "");
+  const { deletePetMutation } = usePetMutation();
 
-  useEffect(() => {
-    const fetchPet = async () => {
-      if (!petId) {
-        navigate("/dashboard/");
-        return;
-      }
-      const pet = await getPetById(petId!);
-      console.log(pet);
-      if (!pet) {
-        navigate("/dashboard/");
-        return;
-      }
-      setPet(pet!);
-      console.log(pet);
-    };
-
-    fetchPet();
-  }, [petId]);
+  console.log("asd", petQuery.data);
+  const pet = petQuery.data;
 
   async function onDelete() {
-    console.log({ pet });
-    const confirmed = await toast.promise(
-      new Promise((resolve) => {
-        toast(
-          (t) => (
-            <div className="flex flex-col gap-2">
-              <span className="DW ">¿Estás seguro?</span>
-              <Button
-                className="bg-rose-500"
-                onClick={() => {
-                  try {
-                    deletePet(petId!);
-                    resolve(true);
-                  } catch (error) {
-                    resolve(false);
-                  } finally {
-                    toast.dismiss(t.id);
-                    navigate("/dashboard/");
-                  }
-                }}
-              >
-                Yes
-              </Button>
-              <Button
-                className="bg-black text-white"
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  resolve(false);
-                }}
-              >
-                No
-              </Button>
-            </div>
-          ),
-          {
-            duration: Infinity,
-          }
-        );
-      }),
-      {
-        loading: "Esperando...",
-        success: "Mascota eliminada",
-        error: "Error al eliminar la mascota",
-      }
-    );
+    deletePetMutation.mutate(petId!);
+    navigate("/dashboard/");
+    toast.success("Mascota eliminada correctamente");
   }
 
-  if (isLoading || !pet) {
-    return <Loading />;
+  if (petQuery.isFetching) return <Loading />;
+
+  if (petQuery.isError || pet == undefined) {
+    return (
+      <>
+        <div className="flex flex-col mx-auto w-2/3 px-4 py-8 text-center gap-4 items-center">
+          <h2 className="text-2xl font-bold text-gray-700">
+            Mascota no encontrada
+          </h2>
+          <p className="text-gray-500 mt-2">
+            Lo sentimos, no pudimos encontrar la información de la mascota que
+            estás buscando.
+          </p>
+          <Button className="bg-rose-500 hover:bg-rose-600 w-fit">
+            <Link to="/dashboard/">Volver a Mascotas</Link>
+          </Button>
+        </div>
+      </>
+    );
   }
 
   return (
@@ -189,7 +146,6 @@ export const PetPage = () => {
                   <span className="text-sm font-medium">Última revisión</span>
                 </div>
                 <span className="text-sm">
-                  {}
                   {new Date(
                     pet.medicalRecord[pet.medicalRecord.length - 1]?.date
                   ).toLocaleDateString() == "Invalid Date"
