@@ -25,12 +25,18 @@ import { MedicalHistory } from "../components/MedicalHistory.ts";
 import { months_ES } from "@/common/data/date.ts";
 import toast from "react-hot-toast";
 import { Loading } from "@/common/components/Loading.tsx";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover.tsx";
+import { AddMedicalRecordForm } from "../components/AddMedicalRecordForm.tsx";
+import { AddVaccinationRecordForm } from "../components/AddVaccinationRecordForm.tsx";
 
 export const PetPage = () => {
   const { getPetById, isLoading, deletePet, error } = usePetStore();
   const navigate = useNavigate();
   const { petId } = useParams();
-
   const [pet, setPet] = useState<Pet>();
 
   useEffect(() => {
@@ -342,10 +348,18 @@ export const PetPage = () => {
               <TabsContent value="medical" className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium">Historial Médico</h3>
-                  <Button className="bg-rose-500 hover:bg-rose-600">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Añadir Registro
-                  </Button>
+
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button className="bg-rose-500 hover:bg-rose-600 cursor-pointer">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Añadir Registro
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80">
+                      <AddMedicalRecordForm />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <MedicalHistory pet={pet} />
               </TabsContent>
@@ -354,10 +368,17 @@ export const PetPage = () => {
                   <h3 className="text-lg font-medium">
                     Historial de Vacunación
                   </h3>
-                  <Button className="bg-rose-500 hover:bg-rose-600">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Añadir Vacuna
-                  </Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button className="bg-rose-500 hover:bg-rose-600 cursor-pointer">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Añadir Registro
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80">
+                      <AddVaccinationRecordForm />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <VaccinationHistory pet={pet} />
               </TabsContent>

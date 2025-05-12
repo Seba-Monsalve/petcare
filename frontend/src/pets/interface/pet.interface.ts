@@ -23,15 +23,30 @@ export interface Pet {
 
 interface VaccinationRecord {
   id: string;
-  type: string;
+  type: VaccinationRecordType;
   date: Date;
   nextDate: Date;
   status: boolean;
 }
 
 interface MedicalRecord {
-  id: 1;
-  type: string;
+  id: string;
+  type: MedicalRecordType;
   date: Date;
   description: string;
+}
+
+export enum MedicalRecordType {
+  Consulta = "Consulta",
+  Cirugia = "Cirugia",
+  Desparacitacion = "Desparacitacion",
+  Otro = "Otro",
+}
+
+export enum VaccinationRecordType {
+  Rabia = "Rabia",
+  Parvovirus = "Parvovirus",
+  Moquillo = "Moquillo",
+  Leptospirosis = "Leptospirosis",
+  Otro = "Otro",
 }
