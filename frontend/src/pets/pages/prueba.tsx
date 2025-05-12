@@ -1,136 +1,93 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  ArrowLeft,
   Pencil,
   Trash2,
-  Heart,
   Calendar,
   Syringe,
   Stethoscope,
+  Heart,
   Clock,
+  MapPin,
   Phone,
   Mail,
-  MapPin,
   Plus,
 } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router";
-import { usePetStore } from "@/store/pet.store";
-import { Pet } from "../interface/pet.interface";
-import { differenceInMonths, differenceInYears } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage, Badge } from "@/components/ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { VaccinationHistory } from "../components/VaccinationHistory";
-import { MedicalHistory } from "../components/MedicalHistory.ts";
-import { months_ES } from "@/common/data/date.ts";
-import toast from "react-hot-toast";
-import { Loading } from "@/common/components/Loading.tsx";
+import Link from "next/link";
+import { VaccinationHistory } from "@/components/vaccination-history";
+import { MedicalHistory } from "@/components/medical-history";
 
-export const PetPage = () => {
-  const { getPetById, isLoading, deletePet, error } = usePetStore();
-  const navigate = useNavigate();
-  const { petId } = useParams();
+// Datos de ejemplo para una mascota específica
+const pet = {
+  id: "1",
+  name: "Max",
+  type: "Perro",
+  breed: "Labrador",
+  color: "Dorado",
+  gender: "Macho",
+  birthDate: "2020-05-10",
+  age: 3,
+  weight: 28.5,
+  microchipNumber: "985121054367890",
+  status: "Activo",
+  lastCheckup: "2023-05-15",
+  notes: "Alérgico a ciertos tipos de alimentos. Requiere dieta especial.",
+  owner: {
+    id: "owner1",
+    name: "Juan Pérez",
+    phone: "+34 600 123 456",
+    email: "juan.perez@example.com",
+    address: "Calle Principal 123, Madrid",
+  },
+};
 
-  const [pet, setPet] = useState<Pet>();
-
-  useEffect(() => {
-    const fetchPet = async () => {
-      if (!petId) {
-        navigate("/dashboard/");
-        return;
-      }
-      const pet = await getPetById(petId!);
-      console.log(pet);
-      if (!pet) {
-        navigate("/dashboard/");
-        return;
-      }
-      setPet(pet!);
-      console.log(pet);
-    };
-
-    fetchPet();
-  }, [petId]);
-
-  async function onDelete() {
-    console.log({ pet });
-    const confirmed = await toast.promise(
-      new Promise((resolve) => {
-        toast(
-          (t) => (
-            <div className="flex flex-col gap-2">
-              <span className="DW ">¿Estás seguro?</span>
-              <Button
-                className="bg-rose-500"
-                onClick={() => {
-                  try {
-                    deletePet(petId!);
-                    resolve(true);
-                  } catch (error) {
-                    resolve(false);
-                  } finally {
-                    toast.dismiss(t.id);
-                    navigate("/dashboard/");
-                  }
-                }}
-              >
-                Yes
-              </Button>
-              <Button
-                className="bg-black text-white"
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  resolve(false);
-                }}
-              >
-                No
-              </Button>
-            </div>
-          ),
-          {
-            duration: Infinity,
-          }
-        );
-      }),
-      {
-        loading: "Esperando...",
-        success: "Mascota eliminada",
-        error: "Error al eliminar la mascota",
-      }
-    );
-  }
-
-  if (isLoading || !pet) {
-    return <Loading />;
-  }
-
+export default function PetDetailPage({ params }: { params: { id: string } }) {
   return (
     <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-4">
+        <Link href="/dashboard/pets">
+          <Button variant="outline" size="icon">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Volver</span>
+          </Button>
+        </Link>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Detalles de Mascota
+        </h1>
+      </div>
+
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-1">
-          {/* <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-lg font-medium">
               Información de la Mascota
             </CardTitle>
-            <Badge variant={pet.isActive ? "default" : "secondary"}>
-              {pet.isActive ? "Activo" : "Inactivo"}
+            <Badge variant={pet.status === "Activo" ? "default" : "secondary"}>
+              {pet.status}
             </Badge>
-          </CardHeader> */}
+          </CardHeader>
           <CardContent className="flex flex-col items-center text-center">
             <Avatar className="h-24 w-24 mb-4">
               <AvatarImage
-                src={
-                  pet.urlImage ||
-                  `/src/assets/images/${pet.species.toLowerCase()}.png`
-                }
+                src={`/placeholder.svg?text=${pet.name.charAt(0)}`}
                 alt={pet.name}
-                className="object-cover"
               />
-              <AvatarFallback>{}</AvatarFallback>
+              <AvatarFallback>{pet.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <h2 className="text-2xl font-bold">{pet.name}</h2>
             <p className="text-sm text-muted-foreground">
-              {pet.species} - {pet.breed}
+              {pet.type} - {pet.breed}
             </p>
 
             <div className="mt-6 w-full space-y-4">
@@ -139,28 +96,17 @@ export const PetPage = () => {
                   <Heart className="h-4 w-4 text-rose-500" />
                   <span className="text-sm font-medium">Edad</span>
                 </div>
-                {differenceInYears(new Date(), new Date(pet.dob)) > 0 &&
-                  `
-                            ${differenceInYears(
-                              new Date(),
-                              new Date(pet.dob)
-                            )} años
-                            `}
-                {` 
-                        ${
-                          differenceInMonths(new Date(), new Date(pet.dob)) % 12
-                        } meses
-                        `}
+                <span className="text-sm">{pet.age} años</span>
               </div>
               <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-rose-500" />
-                  <span className="text-sm font-medium">Nacido en</span>
+                  <span className="text-sm font-medium">
+                    Fecha de nacimiento
+                  </span>
                 </div>
                 <span className="text-sm">
-                  {`${months_ES[new Date(pet.dob).getMonth() + 1]} ${new Date(
-                    pet.dob
-                  ).getFullYear()}`}
+                  {new Date(pet.birthDate).toLocaleDateString()}
                 </span>
               </div>
               <div className="flex items-center justify-between border-b pb-2">
@@ -175,7 +121,7 @@ export const PetPage = () => {
                   <Syringe className="h-4 w-4 text-rose-500" />
                   <span className="text-sm font-medium">Microchip</span>
                 </div>
-                <span className="text-sm">{pet.microchip || "No tiene"}</span>
+                <span className="text-sm">{pet.microchipNumber}</span>
               </div>
               <div className="flex items-center justify-between pb-2">
                 <div className="flex items-center gap-2">
@@ -183,37 +129,26 @@ export const PetPage = () => {
                   <span className="text-sm font-medium">Última revisión</span>
                 </div>
                 <span className="text-sm">
-                  {}
-                  {new Date(
-                    pet.medicalRecord[pet.medicalRecord.length - 1]?.date
-                  ).toLocaleDateString() == "Invalid Date"
-                    ? "Ninguna"
-                    : new Date(
-                        pet.medicalRecord[pet.medicalRecord.length - 1]?.date
-                      ).toLocaleDateString()}
+                  {new Date(pet.lastCheckup).toLocaleDateString()}
                 </span>
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to={`/dashboard/pets/update/${pet.id}`}>
+            <Link href={`/dashboard/pets/${pet.id}/edit`}>
               <Button variant="outline" className="flex items-center gap-1">
                 <Pencil className="h-4 w-4" />
                 Editar
               </Button>
             </Link>
-            <Button
-              variant="destructive"
-              className="flex items-center gap-1"
-              onClick={onDelete}
-            >
+            <Button variant="destructive" className="flex items-center gap-1">
               <Trash2 className="h-4 w-4" />
               Eliminar
             </Button>
           </CardFooter>
         </Card>
 
-        <Card className="md:col-span-2 p-2">
+        <Card className="md:col-span-2">
           {/* <CardHeader>
             <CardTitle>Detalles Completos</CardTitle>
             <CardDescription>
@@ -237,46 +172,35 @@ export const PetPage = () => {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between border-b pb-2">
                           <span className="text-sm font-medium">Género</span>
-                          <span className="text-sm">{pet.sex}</span>
+                          <span className="text-sm">{pet.gender}</span>
                         </div>
                         <div className="flex items-center justify-between border-b pb-2">
                           <span className="text-sm font-medium">Color</span>
-                          <span className="text-sm">{}</span>
+                          <span className="text-sm">{pet.color}</span>
                         </div>
                         <div className="flex items-center justify-between border-b pb-2">
                           <span className="text-sm font-medium">Estado</span>
                           <Badge
-                            variant={pet.isActive ? "default" : "secondary"}
-                            className={`${
-                              pet.isActive ? "bg-green-600" : "bg-red-600"
-                            }`}
+                            variant={
+                              pet.status === "Activo" ? "default" : "secondary"
+                            }
                           >
-                            {pet.isActive ? "Activo" : "Inactivo"}
+                            {pet.status}
                           </Badge>
                         </div>
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between border-b pb-2">
                           <span className="text-sm font-medium">Tipo</span>
-                          <span className="text-sm">{pet.species}</span>
+                          <span className="text-sm">{pet.type}</span>
                         </div>
                         <div className="flex items-center justify-between border-b pb-2">
                           <span className="text-sm font-medium">Raza</span>
                           <span className="text-sm">{pet.breed}</span>
                         </div>
                         <div className="flex items-center justify-between border-b pb-2">
-                          <span className="text-sm font-medium">
-                            Esterilizado
-                          </span>
-                          <span className="text-sm">
-                            {pet.sterilized ? (
-                              <Badge variant="default" className="bg-green-600">
-                                Si
-                              </Badge>
-                            ) : (
-                              <Badge variant="destructive">No</Badge>
-                            )}
-                          </span>
+                          <span className="text-sm font-medium">Edad</span>
+                          <span className="text-sm">{pet.age} años</span>
                         </div>
                       </div>
                     </div>
@@ -286,28 +210,28 @@ export const PetPage = () => {
                     <h3 className="text-lg font-medium mb-2">
                       Información del Propietario
                     </h3>
-                    <Card className="p-2">
-                      <CardContent className="">
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-15 w-15">
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-10 w-10">
                             <AvatarFallback>
-                              {pet.owner.username?.charAt(0)}
+                              {pet.owner.name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
                           <div className="space-y-1">
                             <h4 className="text-sm font-medium">
-                              {pet.owner.username}
+                              {pet.owner.name}
                             </h4>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Phone className="h-3 w-3 text-rose-500" />
+                              <Phone className="h-3 w-3" />
                               <span>{pet.owner.phone}</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Mail className="h-3 w-3 text-rose-500" />
+                              <Mail className="h-3 w-3" />
                               <span>{pet.owner.email}</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <MapPin className="h-3 w-3 text-rose-500" />
+                              <MapPin className="h-3 w-3" />
                               <span>{pet.owner.address}</span>
                             </div>
                           </div>
@@ -318,22 +242,9 @@ export const PetPage = () => {
 
                   <div>
                     <h3 className="text-lg font-medium mb-2">Notas</h3>
-                    <Card className="p-2">
-                      <CardContent className="">
-                        {pet.notes.length > 0 ? (
-                          pet.notes.map((note, index) => (
-                            <ul
-                              key={index}
-                              className="flex items-center gap-2 text-sm text-muted-foreground"
-                            >
-                              <li> # {note}</li>
-                            </ul>
-                          ))
-                        ) : (
-                          <p className="text-sm text-muted-foreground">
-                            No hay notas disponibles.
-                          </p>
-                        )}
+                    <Card>
+                      <CardContent className="p-4">
+                        <p className="text-sm">{pet.notes}</p>
                       </CardContent>
                     </Card>
                   </div>
@@ -347,7 +258,7 @@ export const PetPage = () => {
                     Añadir Registro
                   </Button>
                 </div>
-                <MedicalHistory pet={pet} />
+                <MedicalHistory petId={pet.id} />
               </TabsContent>
               <TabsContent value="vaccines" className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -359,7 +270,7 @@ export const PetPage = () => {
                     Añadir Vacuna
                   </Button>
                 </div>
-                <VaccinationHistory pet={pet} />
+                <VaccinationHistory petId={pet.id} />
               </TabsContent>
             </Tabs>
           </CardContent>
@@ -367,4 +278,4 @@ export const PetPage = () => {
       </div>
     </div>
   );
-};
+}

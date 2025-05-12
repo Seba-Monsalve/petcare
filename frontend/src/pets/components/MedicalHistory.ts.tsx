@@ -1,0 +1,95 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Pet } from "../interface/pet.interface";
+
+// // Datos de ejemplo para el historial médico
+// const medicalRecords = [
+//   {
+//     id: "m1",
+//     date: "2023-05-15",
+//     type: "Revisión general",
+//     diagnosis: "Saludable, sin problemas detectados",
+//     treatment: "Ninguno",
+//     vet: "Dr. García",
+//     status: "Completado",
+//   },
+//   {
+//     id: "m2",
+//     date: "2023-02-10",
+//     type: "Problema digestivo",
+//     diagnosis: "Gastroenteritis leve",
+//     treatment: "Dieta especial y medicación durante 5 días",
+//     vet: "Dra. Martínez",
+//     status: "Completado",
+//   },
+//   {
+//     id: "m3",
+//     date: "2022-11-05",
+//     type: "Revisión dental",
+//     diagnosis: "Acumulación de sarro",
+//     treatment: "Limpieza dental programada",
+//     vet: "Dr. García",
+//     status: "Pendiente",
+//   },
+// ]
+
+export function MedicalHistory({ pet }: { pet: Pet }) {
+  return (
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Fecha</TableHead>
+            <TableHead>Tipo</TableHead>
+            <TableHead>Description</TableHead>
+            {/* <TableHead>Tratamiento</TableHead> */}
+            {/* <TableHead>Veterinario</TableHead> */}
+            {/* <TableHead>Estado</TableHead> */}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {pet.medicalRecord.length > 0 ? (
+            pet.medicalRecord.map((record) => (
+              <TableRow key={record.id}>
+                <TableCell>
+                  {new Date(record.date).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="font-medium">{record.type}</TableCell>
+                <TableCell>{record.description}</TableCell>
+                {/* <TableCell>{record.vet}</TableCell> */}
+                {/* <TableCell>
+                  <Badge
+                    variant="outline"
+                    className={
+                      record.status === "Completado"
+                        ? "bg-green-50 text-green-700 border-green-200"
+                        : "bg-amber-50 text-amber-700 border-amber-200"
+                    }
+                  >
+                    {record.status}
+                  </Badge>
+                </TableCell> */}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={6}
+                className="text-center py-4 text-muted-foreground"
+              >
+                No hay registros médicos para esta mascota
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}

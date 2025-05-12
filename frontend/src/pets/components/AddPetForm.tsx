@@ -25,7 +25,6 @@ import { usePetStore } from "@/store/pet.store";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { Switch } from "@/components/ui/switch";
-import React from "react";
 import { Label } from "@/components/ui";
 
 export function AddPetForm() {
@@ -39,12 +38,13 @@ export function AddPetForm() {
       sterilized: false,
       urlImage: null,
       breed: "",
+      microchip: "",
+      color: "",
     },
   });
-  const navigate = useNavigate();
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   const { addPet, error } = usePetStore();
+  const navigate = useNavigate();
 
   async function onSubmit(values: z.infer<typeof addPetValidation>) {
     const { weight, dob_month, dob_year, ...rest } = values;
@@ -53,7 +53,7 @@ export function AddPetForm() {
     // usar el toast con promise
     await addPet({ weight: +weight, dob, ...rest });
     if (error) return toast.error(error);
-    // navigate("dashboard/pets");
+    navigate("/dashboard");
     toast.success("Mascota agregada correctamente");
   }
 
@@ -115,7 +115,7 @@ export function AddPetForm() {
                 </FormItem>
               )}
             />
-
+            {/* sex */}
             <FormField
               control={form.control}
               name="sex"
@@ -142,6 +142,26 @@ export function AddPetForm() {
                 </FormItem>
               )}
             />
+            {/* color */}
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Blanco"
+                      {...field}
+                      type="text"
+                      min={1}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* species */}
             <FormField
               control={form.control}
               name="species"
@@ -171,7 +191,7 @@ export function AddPetForm() {
                 </FormItem>
               )}
             />
-
+            {/* breed */}
             <FormField
               control={form.control}
               name="breed"
@@ -235,22 +255,22 @@ export function AddPetForm() {
                       <FormControl>
                         <Select onValueChange={field.onChange}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select" />
+                            <SelectValue placeholder="Mes" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectItem value="0">January</SelectItem>
-                              <SelectItem value="1">February</SelectItem>
-                              <SelectItem value="2">March</SelectItem>
-                              <SelectItem value="3">April</SelectItem>
-                              <SelectItem value="4">May</SelectItem>
-                              <SelectItem value="5">June</SelectItem>
-                              <SelectItem value="6">July</SelectItem>
-                              <SelectItem value="7">August</SelectItem>
-                              <SelectItem value="8">September</SelectItem>
-                              <SelectItem value="9">October</SelectItem>
-                              <SelectItem value="10">November</SelectItem>
-                              <SelectItem value="11">December</SelectItem>
+                              <SelectItem value="0">Enero</SelectItem>
+                              <SelectItem value="1">Febrero</SelectItem>
+                              <SelectItem value="2">Marzo</SelectItem>
+                              <SelectItem value="3">Abril</SelectItem>
+                              <SelectItem value="4">Mayo</SelectItem>
+                              <SelectItem value="5">Junio</SelectItem>
+                              <SelectItem value="6">Julio</SelectItem>
+                              <SelectItem value="7">Agosto</SelectItem>
+                              <SelectItem value="8">Septiembre</SelectItem>
+                              <SelectItem value="9">Octubre</SelectItem>
+                              <SelectItem value="10">Noviembre</SelectItem>
+                              <SelectItem value="11">Diciembre</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -267,7 +287,7 @@ export function AddPetForm() {
                       <FormControl>
                         <Select onValueChange={field.onChange}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select" />
+                            <SelectValue placeholder="Año" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
@@ -291,7 +311,25 @@ export function AddPetForm() {
                   )}
                 />
               </div>
-
+              {/* microchip */}
+              <FormField
+                control={form.control}
+                name="microchip"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Microchip</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* esterilizado */}
               <FormField
                 control={form.control}
                 name="sterilized"

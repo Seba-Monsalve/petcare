@@ -8,7 +8,7 @@ export default function DashboardLayout() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex  flex-col">
       <header className="sticky top-0 z-40 border-b bg-background">
         <div className="container flex h-16 items-center justify-between py-4 px-5">
           <div className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export default function DashboardLayout() {
           </div>
         </aside>
         <main className="flex-1 ">
-          <div className="mx-auto py-2  max-w-5xl">
+          <div className="mx-auto px-2  p-0.1 max-w-5xl">
             <Outlet />
           </div>
         </main>

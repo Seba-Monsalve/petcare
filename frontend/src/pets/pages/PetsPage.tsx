@@ -143,7 +143,8 @@ export default function PetsPage() {
     };
 
     fetchData();
-  }, [user]);
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 py-2">
       <div className="flex items-center justify-between">

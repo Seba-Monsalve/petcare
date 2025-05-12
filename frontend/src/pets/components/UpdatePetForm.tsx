@@ -21,14 +21,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PetData } from "../data/pet.data";
-import { useNavigate } from "react-router";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui";
 import { Pet } from "../interface/pet.interface";
 import { usePetStore } from "@/store/pet.store";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
-import { FaTrashAlt } from "react-icons/fa";
 export function UpdatePetForm({ pet }: { pet: Pet }) {
   const form = useForm<z.infer<typeof addPetValidation>>({
     resolver: zodResolver(addPetValidation),
@@ -39,13 +38,14 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
       weight: pet.weight.toString() ?? "0",
       sterilized: pet.sterilized,
       urlImage: pet.urlImage ?? null,
-      breed: pet.breed ?? "",
+      breed: pet.breed ?? null,
       dob_month: pet.dob ? new Date(pet.dob).getMonth().toString() : "",
       dob_year: pet.dob ? new Date(pet.dob).getFullYear().toString() : "",
     },
   });
+  const { updatePet, error } = usePetStore();
+
   const navigate = useNavigate();
-  const { updatePet, error, deletePet } = usePetStore();
 
   async function onSubmit(values: z.infer<typeof addPetValidation>) {
     const { weight, dob_month, dob_year, ...rest } = values;
@@ -53,58 +53,8 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
     // usar el toast con promise
     await updatePet({ weight: +weight, dob, ...rest, id: pet.id });
     if (error) return toast.error(error);
-    // navigate("dashboard/pets");
+    navigate(`/dashboard/pets/${pet.id}`);
     toast.success("Mascota actualizada correctamente");
-  }
-
-  async function onDelete() {
-    const confirmed = await toast.promise(
-      new Promise((resolve, reject) => {
-        toast(
-          (t) => (
-            <div className="flex flex-col gap-2">
-              <span className="DW ">¿Estás seguro?</span>
-              <Button
-                className="bg-rose-500"
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  resolve(true);
-                }}
-              >
-                Yes
-              </Button>
-              <Button
-                className="bg-black text-white"
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  resolve(false);
-                }}
-              >
-                No
-              </Button>
-            </div>
-          ),
-          {
-            duration: Infinity,
-          }
-        );
-      }),
-      {
-        loading: "Esperando...",
-        success: "",
-        error: "",
-      }
-    );
-    if (confirmed) {
-      await deletePet(pet.id);
-      if (!error) {
-        toast.success("Mascota eliminada correctamente");
-        navigate("/dashboard/");
-      } else {
-        toast.error("Error al eliminar la mascota");
-      }
-      return;
-    }
   }
 
   const species = form.watch("species");
@@ -167,7 +117,7 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
                 </FormItem>
               )}
             />
-
+            {/* sex */}
             <FormField
               control={form.control}
               name="sex"
@@ -192,6 +142,26 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* color */}
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Blanco"
+                      {...field}
+                      type="text"
+                      min={1}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -357,7 +327,24 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
                   )}
                 />
               </div>
-
+              {/* microchip */}
+              <FormField
+                control={form.control}
+                name="microchip"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Microchip</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="sterilized"
@@ -376,15 +363,15 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
               />
             </div>
             <div className="flex flex-row gap-2 space-y-2 ">
-              <Button type="submit" className="bg-rose-500  ">
-                Actualizar
-              </Button>
               <Button
-                type="button"
-                onClick={() => onDelete()}
-                className="bg-black "
+                type="submit"
+                className="bg-rose-500"
+                onClick={(e) => {
+                  e.preventDefault();
+                  form.handleSubmit(onSubmit)();
+                }}
               >
-                <FaTrashAlt />
+                Actualizar
               </Button>
             </div>
           </div>
