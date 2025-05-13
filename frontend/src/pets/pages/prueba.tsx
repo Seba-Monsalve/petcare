@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -24,33 +23,31 @@ import {
   Mail,
   Plus,
 } from "lucide-react";
-import Link from "next/link";
-import { VaccinationHistory } from "@/components/vaccination-history";
-import { MedicalHistory } from "@/components/medical-history";
+import { Link } from "react-router";
 
-// Datos de ejemplo para una mascota específica
-const pet = {
-  id: "1",
-  name: "Max",
-  type: "Perro",
-  breed: "Labrador",
-  color: "Dorado",
-  gender: "Macho",
-  birthDate: "2020-05-10",
-  age: 3,
-  weight: 28.5,
-  microchipNumber: "985121054367890",
-  status: "Activo",
-  lastCheckup: "2023-05-15",
-  notes: "Alérgico a ciertos tipos de alimentos. Requiere dieta especial.",
-  owner: {
-    id: "owner1",
-    name: "Juan Pérez",
-    phone: "+34 600 123 456",
-    email: "juan.perez@example.com",
-    address: "Calle Principal 123, Madrid",
-  },
-};
+// // Datos de ejemplo para una mascota específica
+// const pet = {
+//   id: "1",
+//   name: "Max",
+//   type: "Perro",
+//   breed: "Labrador",
+//   color: "Dorado",
+//   gender: "Macho",
+//   birthDate: "2020-05-10",
+//   age: 3,
+//   weight: 28.5,
+//   microchipNumber: "985121054367890",
+//   status: "Activo",
+//   lastCheckup: "2023-05-15",
+//   notes: "Alérgico a ciertos tipos de alimentos. Requiere dieta especial.",
+//   owner: {
+//     id: "owner1",
+//     name: "Juan Pérez",
+//     phone: "+34 600 123 456",
+//     email: "juan.perez@example.com",
+//     address: "Calle Principal 123, Madrid",
+//   },
+// };
 
 export default function PetDetailPage({ params }: { params: { id: string } }) {
   return (

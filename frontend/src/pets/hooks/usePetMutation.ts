@@ -27,37 +27,26 @@ export const usePetMutation = () => {
       return { optimisticPet };
     },
     onSuccess: (newPet, variables, context) => {
-      //Invalidate and refetch
-      // queryClient.invalidateQueries({
-      //   // queryKey: ["pets", { filterKey: data.category }],
-      //   queryKey: ["pets", {}],
-      // });
-
       queryClient.removeQueries({
         queryKey: ["pets", context.optimisticPet.id],
       });
 
-      queryClient.setQueryData(
-        // ["pets", { filterKey: newPet.category }],
-        ["pets", {}],
-        (oldData: any) => {
-          if (!oldData) {
-            return [newPet];
-          }
-          return oldData.map((insertedPet: Pet) => {
-            return insertedPet.id === context.optimisticPet.id
-              ? newPet
-              : insertedPet;
-          });
+      queryClient.setQueryData(["pets", {}], (oldData: any) => {
+        if (!oldData) {
+          return [newPet];
         }
-      );
+        return oldData.map((insertedPet: Pet) => {
+          return insertedPet.id === context.optimisticPet.id
+            ? newPet
+            : insertedPet;
+        });
+      });
     },
     onError: (error, variables, context) => {
       //Invalidate and refetch
       // queryClient.invalidateQueries({
       //   queryKey: ["Pets", { filterKey: data.category }],
       // });
-      console.log(context?.optimisticPet.id);
 
       queryClient.removeQueries({
         queryKey: ["pet", context?.optimisticPet.id],
@@ -81,33 +70,28 @@ export const usePetMutation = () => {
   const updatePetMutation = useMutation({
     mutationFn: updatePetAction,
     onMutate: async (data) => {
+      console.log("onMutate", data);
+
       const optimisticPet = {
         ...data.pet,
       };
 
-      queryClient.setQueryData(
-        // ["pets", { filterKey: data.category }],
-        ["pets", {}],
-        (oldData: any) => {
-          if (oldData) {
-            return [...oldData, optimisticPet];
-          }
-          return [optimisticPet];
+      queryClient.setQueryData(["pets", {}], (oldData: any) => {
+        if (oldData) {
+          return [oldData.map];
         }
-      );
-      queryClient.setQueryData(
-        // ["pets", { filterKey: newPet.category }],
-        ["pet", { petId: optimisticPet.id }],
-        () => {
-          return optimisticPet;
-        }
-      );
+        return [optimisticPet];
+      });
+      queryClient.setQueryData(["pet", { petId: optimisticPet.id }], () => {
+        return optimisticPet;
+      });
       return optimisticPet;
     },
     onSuccess: (newPet, variables, context) => {
       queryClient.removeQueries({
         queryKey: ["pet", { petId: newPet }],
       });
+      console.log("newPet", newPet);
       queryClient.setQueryData(["pet", { petId: newPet.id }], () => {
         return newPet;
       });
@@ -116,12 +100,6 @@ export const usePetMutation = () => {
       });
     },
     onError: (error, variables, context) => {
-      //Invalidate and refetch
-      // queryClient.invalidateQueries({
-      //   queryKey: ["Pets", { filterKey: data.category }],
-      // });
-      console.log(context?.optimisticPet.id);
-
       queryClient.setQueryData(["pets", {}], (oldData: any) => {
         return oldData.map((pet: Pet) => pet);
       });

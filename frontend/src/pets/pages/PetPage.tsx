@@ -37,7 +37,6 @@ export const PetPage = () => {
   const { petQuery } = usePet(petId || "");
   const { deletePetMutation } = usePetMutation();
 
-  console.log("asd", petQuery.data);
   const pet = petQuery.data;
 
   async function onDelete() {
@@ -147,11 +146,18 @@ export const PetPage = () => {
                 </div>
                 <span className="text-sm">
                   {new Date(
-                    pet.medicalRecord[pet.medicalRecord.length - 1]?.date
-                  ).toLocaleDateString() == "Invalid Date"
+                    pet.medicalRecord.sort(
+                      (a, b) =>
+                        new Date(b.date).getTime() - new Date(a.date).getTime()
+                    )[0]?.date
+                  ).toLocaleDateString() === "Invalid Date"
                     ? "Ninguna"
                     : new Date(
-                        pet.medicalRecord[pet.medicalRecord.length - 1]?.date
+                        pet.medicalRecord.sort(
+                          (a, b) =>
+                            new Date(b.date).getTime() -
+                            new Date(a.date).getTime()
+                        )[0]?.date
                       ).toLocaleDateString()}
                 </span>
               </div>
@@ -313,7 +319,7 @@ export const PetPage = () => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80">
-                      <AddMedicalRecordForm />
+                      <AddMedicalRecordForm pet={pet} />
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -328,7 +334,7 @@ export const PetPage = () => {
                     <PopoverTrigger asChild>
                       <Button className="bg-rose-500 hover:bg-rose-600 cursor-pointer">
                         <Plus className="mr-2 h-4 w-4" />
-                        Añadir Registro
+                        Añadir Vacuna
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80">

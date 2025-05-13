@@ -6,8 +6,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Pet } from "../interface/pet.interface";
+import { Trash2 } from "lucide-react";
+import { usePetMutation } from "../hooks";
 
 // // Datos de ejemplo para el historial médico
 // const medicalRecords = [
@@ -41,6 +42,19 @@ import { Pet } from "../interface/pet.interface";
 // ]
 
 export function MedicalHistory({ pet }: { pet: Pet }) {
+  const { updatePetMutation } = usePetMutation();
+  function deleteRecord(id: string): void {
+    const medicalRecord = pet.medicalRecord.filter(
+      (record) => record.id !== id
+    );
+    updatePetMutation.mutate({
+      pet: {
+        medicalRecord: medicalRecord,
+      },
+      id: pet.id,
+    });
+  }
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -48,9 +62,10 @@ export function MedicalHistory({ pet }: { pet: Pet }) {
           <TableRow>
             <TableHead>Fecha</TableHead>
             <TableHead>Tipo</TableHead>
-            <TableHead>Description</TableHead>
+            <TableHead>Descripción</TableHead>
             {/* <TableHead>Tratamiento</TableHead> */}
             {/* <TableHead>Veterinario</TableHead> */}
+            <TableHead>Acciones</TableHead>
             {/* <TableHead>Estado</TableHead> */}
           </TableRow>
         </TableHeader>
@@ -63,6 +78,12 @@ export function MedicalHistory({ pet }: { pet: Pet }) {
                 </TableCell>
                 <TableCell className="font-medium">{record.type}</TableCell>
                 <TableCell>{record.description}</TableCell>
+                <TableCell>
+                  <Trash2
+                    className="text-rose-500 h-5 w-5 rounded-lg hover:bg-rose-100 cursor-pointer"
+                    onClick={() => deleteRecord(record.id)}
+                  />
+                </TableCell>
                 {/* <TableCell>{record.vet}</TableCell> */}
                 {/* <TableCell>
                   <Badge

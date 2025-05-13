@@ -51,8 +51,6 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
   async function onSubmit(values: z.infer<typeof addPetValidation>) {
     const { weight, dob_month, dob_year, ...rest } = values;
     const dob = new Date(+dob_year, +dob_month);
-    // usar el toast con promise
-    // await updatePet({ weight: +weight, dob, ...rest, id: pet.id });
     updatePetMutation.mutate({
       pet: { weight: +weight, dob, ...rest },
       id: pet.id,
