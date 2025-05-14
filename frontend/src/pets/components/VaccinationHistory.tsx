@@ -120,62 +120,69 @@ export function VaccinationHistory({ pet }: { pet: Pet }) {
         </TableHeader>
         <TableBody>
           {pet.vaccinationHistory.length > 0 ? (
-            pet.vaccinationHistory.map((vaccination) => (
-              <TableRow key={vaccination.id}>
-                <TableCell className="font-medium">
-                  {vaccination.type}
-                </TableCell>
-                <TableCell>
-                  {new Date(vaccination.date).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(vaccination.nextDate).toLocaleDateString()}
-                </TableCell>
-                {/* <TableCell>{vaccination.vet}</TableCell> */}
-                <TableCell className="">
-                  {vaccination.status ? (
-                    <Badge
-                      variant="outline"
-                      className="bg-green-50 text-green-700 border-green-300"
-                    >
-                      Completada
-                    </Badge>
-                  ) : compareAsc(new Date(), new Date(vaccination.nextDate)) ==
-                    -1 ? (
-                    <Badge
-                      variant="outline"
-                      className="bg-yellow-50 text-yellow-700 border-yellow-400"
-                    >
-                      Pendiente
-                    </Badge>
-                  ) : (
-                    <Badge
-                      variant="outline"
-                      className="bg-red-50 text-red-700 border-red-400"
-                    >
-                      Atrasada
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell className="flex gap-2">
-                  {vaccination.status ? (
-                    <Check
-                      className="text-white bg-green-400 p-0.5 h-5 w-5 rounded-lg cursor-pointer transition-all"
-                      onClick={() => toogleRecord(vaccination.id)}
-                    />
-                  ) : (
-                    <Circle
+            pet.vaccinationHistory
+              .sort(
+                (a, b) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+              )
+              .map((vaccination) => (
+                <TableRow key={vaccination.id}>
+                  <TableCell className="font-medium">
+                    {vaccination.type}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(vaccination.date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(vaccination.nextDate).toLocaleDateString()}
+                  </TableCell>
+                  {/* <TableCell>{vaccination.vet}</TableCell> */}
+                  <TableCell className="">
+                    {vaccination.status ? (
+                      <Badge
+                        variant="outline"
+                        className="bg-green-50 text-green-700 border-green-300"
+                      >
+                        Completada
+                      </Badge>
+                    ) : compareAsc(
+                        new Date(),
+                        new Date(vaccination.nextDate)
+                      ) == -1 ? (
+                      <Badge
+                        variant="outline"
+                        className="bg-yellow-50 text-yellow-700 border-yellow-400"
+                      >
+                        Pendiente
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="outline"
+                        className="bg-red-50 text-red-700 border-red-400"
+                      >
+                        Atrasada
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="flex gap-2">
+                    {vaccination.status ? (
+                      <Check
+                        className="text-white bg-green-400 p-0.5 h-5 w-5 rounded-lg cursor-pointer transition-all"
+                        onClick={() => toogleRecord(vaccination.id)}
+                      />
+                    ) : (
+                      <Circle
+                        className="text-rose-500 h-5 w-5 rounded-lg hover:bg-rose-100 cursor-pointer transition-all"
+                        onClick={() => toogleRecord(vaccination.id)}
+                      />
+                    )}
+                    <Trash2
                       className="text-rose-500 h-5 w-5 rounded-lg hover:bg-rose-100 cursor-pointer transition-all"
-                      onClick={() => toogleRecord(vaccination.id)}
+                      onClick={() => deleteRecord(vaccination.id)}
                     />
-                  )}
-                  <Trash2
-                    className="text-rose-500 h-5 w-5 rounded-lg hover:bg-rose-100 cursor-pointer transition-all"
-                    onClick={() => deleteRecord(vaccination.id)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))
+                  </TableCell>
+                </TableRow>
+              ))
           ) : (
             <TableRow>
               <TableCell
