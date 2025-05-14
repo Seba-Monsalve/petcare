@@ -250,7 +250,7 @@ export default function PetDetailPage({ params }: { params: { id: string } }) {
               <TabsContent value="medical" className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium">Historial Médico</h3>
-                  <Button className="bg-rose-500 hover:bg-rose-600">
+                  <Button variant={"default"}>
                     <Plus className="mr-2 h-4 w-4" />
                     Añadir Registro
                   </Button>
@@ -262,7 +262,7 @@ export default function PetDetailPage({ params }: { params: { id: string } }) {
                   <h3 className="text-lg font-medium">
                     Historial de Vacunación
                   </h3>
-                  <Button className="bg-rose-500 hover:bg-rose-600">
+                  <Button className=" hover:bg-rose-600">
                     <Plus className="mr-2 h-4 w-4" />
                     Añadir Vacuna
                   </Button>

@@ -12,14 +12,15 @@ import {
   Mail,
   MapPin,
   Plus,
+  PawPrintIcon,
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { differenceInMonths, differenceInYears } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage, Badge } from "@/components/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VaccinationHistory } from "../components/VaccinationHistory";
-import { MedicalHistory } from "../components/MedicalHistory.ts";
-import { months_ES } from "@/common/data/date.ts";
+import { MedicalHistory } from "../components/MedicalHistory";
+import { months_ES } from "@/common/data/date.data.ts";
 import { Loading } from "@/common/components/Loading.tsx";
 import {
   Popover,
@@ -29,7 +30,8 @@ import {
 import { AddMedicalRecordForm } from "../components/AddMedicalRecordForm.tsx";
 import { AddVaccinationRecordForm } from "../components/AddVaccinationRecordForm.tsx";
 import { usePet, usePetMutation } from "../hooks/index.ts";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const PetPage = () => {
   const navigate = useNavigate();
@@ -37,12 +39,15 @@ export const PetPage = () => {
   const { petQuery } = usePet(petId || "");
   const { deletePetMutation } = usePetMutation();
 
+  const [confirm, setconfirm] = useState(false);
   const pet = petQuery.data;
 
   async function onDelete() {
     deletePetMutation.mutate(petId!);
     navigate("/dashboard/");
-    toast.success("Mascota eliminada correctamente");
+    toast.success("Mascota eliminada correctamente", {
+      icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+    });
   }
 
   if (petQuery.isFetching) return <Loading />;
@@ -58,7 +63,7 @@ export const PetPage = () => {
             Lo sentimos, no pudimos encontrar la información de la mascota que
             estás buscando.
           </p>
-          <Button className="bg-rose-500 hover:bg-rose-600 w-fit">
+          <Button className=" hover:bg-rose-600 w-fit">
             <Link to="/dashboard/">Volver a Mascotas</Link>
           </Button>
         </div>
@@ -83,7 +88,7 @@ export const PetPage = () => {
               <AvatarImage
                 src={
                   pet.urlImage ||
-                  `/src/assets/images/${pet.species.toLowerCase()}.png`
+                  `/src/assets/images/${pet.species.toLowerCase()}.jpg`
                 }
                 alt={pet.name}
                 className="object-cover"
@@ -173,10 +178,14 @@ export const PetPage = () => {
             <Button
               variant="destructive"
               className="flex items-center gap-1"
-              onClick={onDelete}
+              onClick={() => {
+                if (confirm) onDelete();
+                setconfirm((prev) => !prev);
+              }}
             >
               <Trash2 className="h-4 w-4" />
-              Eliminar
+
+              {!confirm ? "Eliminar" : "Segurito?"}
             </Button>
           </CardFooter>
         </Card>
@@ -313,7 +322,7 @@ export const PetPage = () => {
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button className="bg-rose-500 hover:bg-rose-600 cursor-pointer">
+                      <Button variant={"default"}>
                         <Plus className="mr-2 h-4 w-4" />
                         Añadir Registro
                       </Button>
@@ -332,13 +341,13 @@ export const PetPage = () => {
                   </h3>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button className="bg-rose-500 hover:bg-rose-600 cursor-pointer">
+                      <Button className=" hover:bg-rose-600 cursor-pointer">
                         <Plus className="mr-2 h-4 w-4" />
                         Añadir Vacuna
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80">
-                      <AddVaccinationRecordForm />
+                      <AddVaccinationRecordForm pet={pet} />
                     </PopoverContent>
                   </Popover>
                 </div>

@@ -12,7 +12,7 @@ export const usePets = () => {
   });
 
   const nextPage = () => {
-    if (petsQuery.data?.length === 0) return;
+    if (!petsQuery.data || petsQuery.data.length === 0) return;
     setpage((prev) => prev + 1);
   };
 

@@ -51,7 +51,7 @@ export const useAuthStore = create<StoreState>()(
             message: res.data.message,
           });
         } catch (error) {
-          console.log((error as any).response.data.message);
+          //console.log((error as any).response.data.message);
           set({
             isLoading: false,
             error: "Error Signing user",
@@ -81,11 +81,13 @@ export const useAuthStore = create<StoreState>()(
           });
           return { user, message };
         } catch (error) {
-          console.log((error as any).response.data.message);
+          //console.log((error as any).response.data.message);
           set({
             isLoading: false,
             error: "Error Login user",
           });
+
+          return { isLoading: false, error: "Error Login user" };
         }
       },
 
@@ -126,7 +128,7 @@ export const useAuthStore = create<StoreState>()(
         } catch (error) {
           set({ user: null, error: null, message: null, isLoading: false });
 
-          console.log((error as any).response.data.message);
+          //console.log((error as any).response.data.message);
           return {
             error: "Error logging out",
           };

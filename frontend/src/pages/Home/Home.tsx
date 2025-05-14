@@ -8,11 +8,29 @@ import {
   Calendar,
   CheckCircle,
   ArrowRight,
+  Copy,
+  PawPrintIcon,
 } from "lucide-react";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "@/components/Footer";
+import { DialogClose } from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@radix-ui/react-label";
+import { RegisterForm } from "@/auth/components/RegisterForm";
+import { useAuthStore } from "@/store/auth.store";
+import { useState } from "react";
+import { set } from "date-fns";
 
 export default function Home() {
+  const [message, setmessage] = useState(null);
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -33,17 +51,30 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row itecems-center justify-center md:justify-start">
-                  <Link to="#register">
-                    <Button size="lg" className="bg-rose-500 hover:bg-rose-600">
-                      Registrar Mascota
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <Link to="#how-it-works">
+                  {/* signup */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="default">Registrate!</Button>
+                    </DialogTrigger>
+                    <DialogContent className="text-center">
+                      <DialogHeader className="flex flex-col items-center">
+                        <PawPrintIcon className="h-8 w-8 text-rose-500" />
+
+                        <DialogTitle> Registrate </DialogTitle>
+                        <DialogDescription>
+                          Crea una cuenta para gestionar la salud de tu mascota.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <RegisterForm />
+                      <DialogFooter className=" flex flex-col items-center justify-center"></DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  <a href="#how-it-works">
                     <Button size="lg" variant="outline">
                       Cómo Funciona
                     </Button>
-                  </Link>
+                  </a>
                 </div>
               </div>
               <div className="flex items-center justify-center ">
@@ -357,7 +388,7 @@ export default function Home() {
                   </div>
                   <Button
                     type="submit"
-                    className="w-full bg-rose-500 hover:bg-rose-600"
+                    className="w-full  hover:bg-rose-600"
                   >
                     Registrar Mascota
                   </Button>
@@ -390,17 +421,23 @@ export default function Home() {
                     className="max-w-lg"
                   />
                   <textarea
-                    className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 
+                    resize-none
+                    "
                     placeholder="Tu mensaje"
                   ></textarea>
                   <Button
                     type="submit"
-                    className="bg-rose-500 hover:bg-rose-600"
+                    className=" hover:bg-rose-600"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setmessage("Mensaje");
+                    }}
                   >
-                    Enviar Mensaje
+                    {message ? "Mensaje enviado!" : "Enviar Mensaje"}
                   </Button>
                 </form>
-                <p className="text-xs text-muted-foreground">
+                {/* <p className="text-xs text-muted-foreground">
                   También puedes contactarnos directamente en{" "}
                   <a
                     href="mailto:info@petcare.com"
@@ -415,7 +452,7 @@ export default function Home() {
                   >
                     +34 600 000 000
                   </a>
-                </p>
+                </p> */}
               </div>
             </div>
           </div>

@@ -1,4 +1,10 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router";
 import Home from "./pages/Home/Home";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import LoginPage from "./auth/pages/LoginPage";
@@ -9,10 +15,10 @@ import { Unauthorized } from "./pages/Unauthorized";
 import PetsPage from "./pets/pages/PetsPage";
 import { AddPetPage, PetPage } from "./pets/pages";
 import { UpdatePetPage } from "./pets/pages/UpdatePetPage";
+import { VetPage } from "./vets/pages/VetPages";
 
 function AppRouter() {
   const { user } = useAuthStore();
-  console.log("AppRouter", user);
   return (
     <BrowserRouter>
       <Routes>
@@ -34,7 +40,7 @@ function AppRouter() {
             path="/dashboard/pets/update/:petId"
             element={<UpdatePetPage />}
           />
-          <Route path="/dashboard/vets" element={<h1>vets</h1>} />
+          <Route path="/dashboard/vets" element={<VetPage />} />
         </Route>
         <Route path="/pitbull" element={<Unauthorized />} />
         <Route path="*" element={<Navigate to="/" />} />

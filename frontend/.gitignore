@@ -21,4 +21,14 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.cache
+*.pid
+*.seed
+*.pid.lock
+coverage
 *.sw?

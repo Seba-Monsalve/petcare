@@ -21,12 +21,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PetData } from "../data/pet.data";
-import { usePetStore } from "@/store/pet.store";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui";
 import { usePetMutation } from "../hooks/usePetMutation";
+import axios from "axios";
+import { toast } from "sonner";
+import { PawPrintIcon } from "lucide-react";
 
 export function AddPetForm() {
   const form = useForm<z.infer<typeof addPetValidation>>({
@@ -44,22 +45,42 @@ export function AddPetForm() {
     },
   });
 
-  const { addPet, error } = usePetStore();
   const navigate = useNavigate();
 
   const { createPetMutation } = usePetMutation();
 
   async function onSubmit(values: z.infer<typeof addPetValidation>) {
-    const { weight, dob_month, dob_year, ...rest } = values;
-
+    const { weight, dob_month, dob_year, urlImage, ...rest } = values;
     const dob = new Date(+dob_year, +dob_month);
-    // usar el toast con promise
-    // await addPet({ weight: +weight, dob, ...rest });
 
-    createPetMutation.mutate({ weight: +weight, dob, ...rest });
-    if (error) return toast.error(error);
+    let res;
+    const data = new FormData();
+    if (urlImage && urlImage.length > 0) {
+      data.append("file", urlImage[0]);
+      data.append(
+        "upload_preset",
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      );
+      data.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+      res = await axios.post(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+        }/image/upload`,
+        data
+      );
+    }
+
+    createPetMutation.mutate({
+      weight: +weight,
+      dob,
+      urlImage: res?.data.secure_url,
+      ...rest,
+    });
     navigate("/dashboard");
-    toast.success("Mascota agregada correctamente");
+    toast.success("Mascota creada correctamente", {
+      description: "Un nuevo integrante en la familia!",
+      icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+    });
   }
 
   const species = form.watch("species");
@@ -80,8 +101,8 @@ export function AddPetForm() {
                 urlImage && urlImage.length > 0
                   ? URL.createObjectURL(urlImage[0])
                   : species
-                  ? `/src/assets/images/${species.toLowerCase()}.png`
-                  : `/src/assets/images/none.png`
+                  ? `/src/assets/images/${species.toLowerCase()}.jpg`
+                  : `/src/assets/images/none.jpg`
               }
               alt="Imagen de la mascota"
               className="h-50 w-50 rounded-lg object-cover "
@@ -349,7 +370,7 @@ export function AddPetForm() {
                 )}
               />
             </div>
-            <Button type="submit" className="bg-rose-500 w-full ">
+            <Button type="submit" className=" w-full ">
               Ingresar
             </Button>
           </div>

@@ -18,7 +18,10 @@ export default function LoginPage() {
         <Card className="w-3/12">
           <CardHeader>
             <Link to="/" className=" relative -left-2 -top-2 sm:top-0  ">
-              <Button variant="ghost" className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                className="flex items-center gap-1 cursor"
+              >
                 <ArrowLeft className="h-4 w-4" />
                 Volver
               </Button>
@@ -60,7 +63,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-rose-500 hover:bg-rose-600"
+                className="w-full  hover:bg-rose-600"
                 disabled={loading}
               >
                 {loading ? "Procesando..." : "Iniciar sesión"}
@@ -69,17 +72,7 @@ export default function LoginPage() {
 
             <LoginForm />
           </CardContent>
-          <CardFooter>
-            <p className="text-center text-sm text-muted-foreground">
-              ¿No tienes una cuenta?{" "}
-              <Link
-                to="/register"
-                className="underline underline-offset-4 hover:text-primary"
-              >
-                Registrarse
-              </Link>
-            </p>
-          </CardFooter>
+          <CardFooter></CardFooter>
         </Card>
       </div>
     </div>

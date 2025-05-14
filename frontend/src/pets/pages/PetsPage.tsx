@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -15,127 +14,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus, Search, Filter, ArrowUpDown, ListCollapse } from "lucide-react";
+import { Plus, ListCollapse } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { differenceInMonths, differenceInYears } from "date-fns";
-import { useAuthStore } from "@/store/auth.store";
 import { usePets } from "../hooks/";
 import { Loading } from "@/common/components/Loading";
 import { Pet } from "../interface/pet.interface";
 import { usePrefetchPet } from "../hooks/usePrefetchPet";
 
-// Datos de ejemplo para mascotas
-// const pets = [
-//   {
-//     id: "1",
-//     name: "Max",
-//     type: "Perro",
-//     breed: "Labrador",
-//     age: 3,
-//     owner: "Juan Pérez",
-//     status: "Activo",
-//     lastCheckup: "2023-05-15",
-//   },
-//   {
-//     id: "2",
-//     name: "Luna",
-//     type: "Gato",
-//     breed: "Siamés",
-//     age: 2,
-//     owner: "María García",
-//     status: "Activo",
-//     lastCheckup: "2023-06-20",
-//   },
-//   {
-//     id: "3",
-//     name: "Rocky",
-//     type: "Perro",
-//     breed: "Pastor Alemán",
-//     age: 5,
-//     owner: "Carlos Rodríguez",
-//     status: "Inactivo",
-//     lastCheckup: "2023-04-10",
-//   },
-//   {
-//     id: "4",
-//     name: "Milo",
-//     type: "Gato",
-//     breed: "Persa",
-//     age: 1,
-//     owner: "Ana Martínez",
-//     status: "Activo",
-//     lastCheckup: "2023-07-05",
-//   },
-//   {
-//     id: "5",
-//     name: "Coco",
-//     type: "Ave",
-//     breed: "Canario",
-//     age: 2,
-//     owner: "Pedro Sánchez",
-//     status: "Activo",
-//     lastCheckup: "2023-06-15",
-//   },
-//   {
-//     id: "6",
-//     name: "Toby",
-//     type: "Perro",
-//     breed: "Beagle",
-//     age: 4,
-//     owner: "Laura Fernández",
-//     status: "Activo",
-//     lastCheckup: "2023-05-25",
-//   },
-//   {
-//     id: "7",
-//     name: "Simba",
-//     type: "Gato",
-//     breed: "Maine Coon",
-//     age: 3,
-//     owner: "David López",
-//     status: "Inactivo",
-//     lastCheckup: "2023-03-30",
-//   },
-//   {
-//     id: "8",
-//     name: "Bella",
-//     type: "Perro",
-//     breed: "Bulldog",
-//     age: 2,
-//     owner: "Sofía Gómez",
-//     status: "Activo",
-//     lastCheckup: "2023-07-10",
-//   },
-// ];
-
 export default function PetsPage() {
-  const { user } = useAuthStore();
-
   const { petsQuery } = usePets();
 
   const { data: pets, isFetching } = petsQuery;
@@ -143,8 +31,6 @@ export default function PetsPage() {
 
   const prefetchPet = usePrefetchPet();
 
-  console.log(pets);
-  console.log(isFetching);
   if (isFetching) {
     return <Loading />;
   }
@@ -154,7 +40,7 @@ export default function PetsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Mascotas</h1>
         <Link to="/dashboard/pets/new">
-          <Button className="bg-rose-500 hover:bg-rose-600">
+          <Button variant={"default"}>
             <Plus className="mr-2 h-4 w-4" />
             Nueva Mascota
           </Button>
@@ -170,7 +56,8 @@ export default function PetsPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            {/* filstros y busquda */}
+            {/* <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex w-full items-center gap-2 sm:w-auto">
                 <div className="relative w-full sm:w-64">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -212,7 +99,7 @@ export default function PetsPage() {
                   elementos por página
                 </p>
               </div>
-            </div>
+            </div> */}
 
             <div className="rounded-md border">
               <Table>
@@ -223,7 +110,7 @@ export default function PetsPage() {
                     <TableHead>
                       <div className="flex items-center gap-1">
                         Nombre
-                        <ArrowUpDown className="h-3 w-3" />
+                        {/* <ArrowUpDown className="h-3 w-3" /> */}
                       </div>
                     </TableHead>
                     <TableHead>Tipo</TableHead>
@@ -250,7 +137,7 @@ export default function PetsPage() {
                               <AvatarImage
                                 src={
                                   pet.urlImage ||
-                                  `/src/assets/images/${pet.species.toLowerCase()}.png`
+                                  `/src/assets/images/${pet.species.toLowerCase()}.jpg`
                                 }
                                 className="object-cover rounded-full"
                                 alt={pet.name}
@@ -270,7 +157,7 @@ export default function PetsPage() {
                         </TableCell>
                         <TableCell>{pet.species}</TableCell>
                         <TableCell>{pet.breed}</TableCell>
-                        <TableCell className="flex flex-col text-center items-center justify-center">
+                        <TableCell>
                           <span>
                             {differenceInYears(new Date(), new Date(pet.dob)) >
                               0 &&
@@ -311,7 +198,7 @@ export default function PetsPage() {
                         </TableCell>
                         <TableCell className="text-center">
                           <Button
-                            className="bg-rose-500 hover:bg-black cursor-pointer"
+                            variant={"outline"}
                             onClick={() => {
                               navigate(`/dashboard/pets/${pet.id}`);
                               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -326,7 +213,7 @@ export default function PetsPage() {
               </Table>
             </div>
 
-            <div className="flex items-center justify-end">
+            {/* <div className="flex items-center justify-end">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
@@ -351,7 +238,7 @@ export default function PetsPage() {
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
-            </div>
+            </div> */}
           </div>
         </CardContent>
       </Card>

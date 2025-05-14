@@ -1,5 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Menu, PawPrintIcon as Paw } from "lucide-react";
+import { Menu, PawPrintIcon as Paw, PawPrintIcon } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { LoginForm } from "@/auth/components/LoginForm";
+import { RegisterForm } from "@/auth/components/RegisterForm";
 
 export const Navbar = () => {
   return (
@@ -10,12 +21,12 @@ export const Navbar = () => {
           <span className="text-xl font-bold">PetCare</span>
         </div>
         <nav className="hidden md:flex gap-6">
-          <a
+          {/* <a
             href="#features"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Características
-          </a>
+          </a> */}
           <a
             href="#how-it-works"
             className="text-sm font-medium transition-colors hover:text-primary"
@@ -36,13 +47,45 @@ export const Navbar = () => {
           </a>
         </nav>
         <div className="flex items-center gap-4">
-          <a href="/login" className="hidden md:block">
-            <Button className="bg-rose-500"> Log in</Button>
-          </a>
-          <a href="/register" className="hidden md:block">
-            <Button variant={"outline"}>Sign Up</Button>
-          </a>
-          <Button variant="ghost" size="icon" className="md:hidden">
+          {/* login */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="default">Login</Button>
+            </DialogTrigger>
+            <DialogContent className="text-center">
+              <DialogHeader className="flex flex-col items-center">
+                <PawPrintIcon className="h-8 w-8 text-rose-500" />
+
+                <DialogTitle>Ingresa con tu cuenta</DialogTitle>
+                <DialogDescription>
+                  Gestiona tu mascota de forma fácil y rápida.
+                </DialogDescription>
+              </DialogHeader>
+              <LoginForm />
+              <DialogFooter className=""></DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* signup */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">SignUp</Button>
+            </DialogTrigger>
+            <DialogContent className="text-center">
+              <DialogHeader className="flex flex-col items-center">
+                <PawPrintIcon className="h-8 w-8 text-rose-500" />
+
+                <DialogTitle> Registrate </DialogTitle>
+                <DialogDescription>
+                  Crea una cuenta para gestionar la salud de tu mascota.
+                </DialogDescription>
+              </DialogHeader>
+              <RegisterForm />
+              <DialogFooter className=""></DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <Button variant="ghost" size="icon" className="md:hidden ">
             <Menu className="h-5 w-5" />
             <span className="sr-only">Menú</span>
           </Button>

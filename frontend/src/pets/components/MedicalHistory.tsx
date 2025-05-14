@@ -7,8 +7,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pet } from "../interface/pet.interface";
-import { Trash2 } from "lucide-react";
+import { PawPrintIcon, Trash2 } from "lucide-react";
 import { usePetMutation } from "../hooks";
+import { toast } from "sonner";
 
 // // Datos de ejemplo para el historial médico
 // const medicalRecords = [
@@ -50,8 +51,21 @@ export function MedicalHistory({ pet }: { pet: Pet }) {
     updatePetMutation.mutate({
       pet: {
         medicalRecord: medicalRecord,
+        vaccinationHistory: pet.vaccinationHistory,
       },
       id: pet.id,
+    });
+
+    if (updatePetMutation.isError) {
+      toast.error("Error al actualizar la mascota", {
+        description: "No se pudo actualizar la mascota",
+        icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+      });
+      return;
+    }
+    toast.success("Mascota actualizada", {
+      description: "El historial médico ha sido actualizado ",
+      icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
     });
   }
 

@@ -9,6 +9,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Pet } from "../interface/pet.interface";
 import { compareAsc } from "date-fns";
+import { Check, Circle, PawPrintIcon, Trash2 } from "lucide-react";
+import { usePetMutation } from "../hooks";
+import { toast } from "sonner";
 
 // // Datos de ejemplo para el historial de vacunación
 // const vaccinations = [
@@ -47,7 +50,62 @@ import { compareAsc } from "date-fns";
 // ]
 
 export function VaccinationHistory({ pet }: { pet: Pet }) {
-  console.log(pet);
+  const { updatePetMutation } = usePetMutation();
+  function toogleRecord(id: string): void {
+    const vaccinationHistory = pet.vaccinationHistory.map((record) => {
+      if (record.id === id) {
+        return {
+          ...record,
+          status: !record.status,
+        };
+      }
+      return record;
+    });
+    updatePetMutation.mutate({
+      pet: {
+        vaccinationHistory: vaccinationHistory,
+        medicalRecord: pet.medicalRecord,
+      },
+      id: pet.id,
+    });
+    if (updatePetMutation.isError) {
+      toast.error("Error al actualizar la mascota", {
+        description: "No se pudo actualizar la mascota",
+        icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+      });
+      return;
+    }
+    toast.success("Mascota actualizada", {
+      description: "El historial de vacunación ha sido actualizado ",
+      icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+    });
+  }
+
+  function deleteRecord(id: string): void {
+    const vaccinationHistory = pet.vaccinationHistory.filter(
+      (record) => record.id !== id
+    );
+    updatePetMutation.mutate({
+      pet: {
+        vaccinationHistory: vaccinationHistory,
+        medicalRecord: pet.medicalRecord,
+      },
+      id: pet.id,
+    });
+
+    if (updatePetMutation.isError) {
+      toast.error("Error al actualizar la mascota", {
+        description: "No se pudo actualizar la mascota",
+        icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+      });
+      return;
+    }
+    toast.success("Mascota actualizada", {
+      description: "El historial de vacunación ha sido actualizado ",
+      icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+    });
+  }
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -57,9 +115,7 @@ export function VaccinationHistory({ pet }: { pet: Pet }) {
             <TableHead>Fecha</TableHead>
             <TableHead>Próxima Dosis</TableHead>
             <TableHead>Estado</TableHead>
-            {/* <TODO></TODO> */}
-            {/* <TableHead>Veterinario</TableHead> */}
-            {/* <TableHead>Estado</TableHead> */}
+            <TableHead>Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -100,6 +156,23 @@ export function VaccinationHistory({ pet }: { pet: Pet }) {
                       Atrasada
                     </Badge>
                   )}
+                </TableCell>
+                <TableCell className="flex gap-2">
+                  {vaccination.status ? (
+                    <Check
+                      className="text-white bg-green-400 p-0.5 h-5 w-5 rounded-lg cursor-pointer transition-all"
+                      onClick={() => toogleRecord(vaccination.id)}
+                    />
+                  ) : (
+                    <Circle
+                      className="text-rose-500 h-5 w-5 rounded-lg hover:bg-rose-100 cursor-pointer transition-all"
+                      onClick={() => toogleRecord(vaccination.id)}
+                    />
+                  )}
+                  <Trash2
+                    className="text-rose-500 h-5 w-5 rounded-lg hover:bg-rose-100 cursor-pointer transition-all"
+                    onClick={() => deleteRecord(vaccination.id)}
+                  />
                 </TableCell>
               </TableRow>
             ))

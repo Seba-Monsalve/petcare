@@ -53,9 +53,9 @@ html {
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(64.5% 0.246 16.439);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.6 0.118 184.704);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -89,7 +89,7 @@ html {
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  --secondary:oklch(0.488 0.243 264.376);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
@@ -121,4 +121,10 @@ html {
   body {
     @apply bg-background text-foreground;
   }
+  .primary {
+  @apply bg-primary text-white font-bold py-2 px-4 rounded hover:bg-rose-700;
+}
+  .secondary {
+  @apply bg-secondary  font-bold rounded ;
+}
 }

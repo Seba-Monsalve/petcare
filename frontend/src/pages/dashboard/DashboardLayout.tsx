@@ -1,12 +1,35 @@
 import { Link, Outlet, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
-import { PawPrintIcon, Users, Settings, LogOut } from "lucide-react";
+import {
+  PawPrintIcon,
+  Users,
+  Settings,
+  LogOut,
+  Search,
+  HousePlus,
+} from "lucide-react";
 import { useAuthStore } from "@/store/auth.store";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function DashboardLayout() {
-  const { user, logout } = useAuthStore();
+  const { user, logout: logoutAuth } = useAuthStore();
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+  function logout() {
+    return async () => {
+      localStorage.removeItem("user");
+      toast.success("Sesión cerrada", {
+        description: "Hasta luego!!",
+        icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+      });
+      await logoutAuth();
+      navigate("/", { replace: true });
+      queryClient.clear();
+    };
+  }
+
   return (
     <div className="flex  flex-col">
       <header className="sticky top-0 z-40 border-b bg-background">
@@ -23,16 +46,7 @@ export default function DashboardLayout() {
                 Hola, <span className="font-medium">{user.username}</span>
               </span>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={async () => {
-                localStorage.removeItem("user");
-                toast.success("Sesión cerrada");
-                await logout();
-                navigate("/", { replace: true });
-              }}
-            >
+            <Button variant="ghost" size="icon" onClick={logout()}>
               <LogOut className="h-5 w-5" />
               <span className="sr-only">Cerrar sesión</span>
             </Button>
@@ -54,18 +68,29 @@ export default function DashboardLayout() {
                 Mis Mascotas
               </Button>
             </Link>
-            <a href="/dashboard/vets">
-              <Button variant="ghost" className="w-full justify-start">
+            <div>
+              {/* Veterinarios */}
+              <Button disabled variant="ghost" className="w-full justify-start">
                 <Users className="mr-2 h-5 w-5" />
                 Veterinarios
               </Button>
-            </a>
-            <Link to="#">
-              <Button variant="ghost" className="w-full justify-start">
-                <Settings className="mr-2 h-5 w-5" />
-                Configuración
-              </Button>
-            </Link>
+            </div>
+            {/* search */}
+            <Button disabled variant="ghost" className="w-full justify-start">
+              <Search className="mr-2 h-5 w-5" />
+              Mascotas Perdidas
+            </Button>
+            {/* adopcion */}
+            <Button disabled variant="ghost" className="w-full justify-start">
+              <HousePlus className="mr-2 h-5 w-5" />
+              Adopta!
+            </Button>
+            {/* config */}
+
+            <Button disabled variant="ghost" className="w-full justify-start">
+              <Settings className="mr-2 h-5 w-5" />
+              Configuración
+            </Button>
           </div>
         </aside>
         <main className="flex-1 ">

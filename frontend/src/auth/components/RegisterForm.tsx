@@ -14,8 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { registerFormSchema } from "@/auth/validation/";
 import { useAuthStore } from "@/store/auth.store";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function RegisterForm() {
   const { signUp, error, user } = useAuthStore();
@@ -32,13 +32,11 @@ export function RegisterForm() {
   });
 
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
-    console.log("values", values);
-
     await signUp({ ...values });
     if (error) {
-      toast.error(error);
+      toast("Error al crear el usuario");
     } else {
-      toast.success("Usuario creado correctamente");
+      toast("Usuario creado correctamente");
 
       localStorage.setItem("user", JSON.stringify(user));
       navigate("/dashboard");
@@ -118,8 +116,8 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="bg-rose-500">
-          Ingresar
+        <Button type="submit" className="">
+          Registrarse
         </Button>
       </form>
     </Form>

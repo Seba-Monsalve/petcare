@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MedicalRecordType } from "../interface/pet.interface";
 import { useForm } from "react-hook-form";
@@ -23,9 +22,8 @@ import { addMedicalRecordSchema } from "../validation/addMedicalRecord.schema";
 import { z } from "zod";
 import { usePetMutation } from "../hooks";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { PetData } from "../data/pet.data";
-import { months_ES } from "@/common/data/date";
-import { D } from "node_modules/@tanstack/react-query-devtools/build/modern/ReactQueryDevtools-Cn7cKi7o";
+import { months_ES } from "@/common/data/date.data";
+import { VaccinationHistory } from "./VaccinationHistory";
 
 export const AddMedicalRecordForm = ({ pet }: { pet: any }) => {
   const form = useForm<z.infer<typeof addMedicalRecordSchema>>({
@@ -37,11 +35,9 @@ export const AddMedicalRecordForm = ({ pet }: { pet: any }) => {
       year: new Date().getFullYear().toString(),
     },
   });
-  console.log(months_ES[new Date().getMonth()]);
   const { updatePetMutation } = usePetMutation();
 
   function onSubmit(values: z.infer<typeof addMedicalRecordSchema>) {
-    console.log({ values });
     const medicalRecord = [
       ...pet.medicalRecord,
       {
@@ -54,6 +50,7 @@ export const AddMedicalRecordForm = ({ pet }: { pet: any }) => {
     updatePetMutation.mutate({
       pet: {
         medicalRecord: medicalRecord,
+        vaccinationHistory: pet.vaccinationHistory,
       },
       id: pet.id,
     });
@@ -181,9 +178,10 @@ export const AddMedicalRecordForm = ({ pet }: { pet: any }) => {
           type="submit"
           className={`cursor-pointer  ${
             !form.formState.isValid
-              ? "bg-gray-300 "
-              : "bg-rose-500 hover:bg-rose-600 transition-colors "
-          }  text-white   rounded-md px-4 py-2 text-sm font-medium shadow-sm duration-200 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50`}
+              ? "bg-gray-300 text-gray-500"
+              : "bg-rose-500 text-white hover:bg-rose-600"
+          }  rounded-md px-4 py-2 text-sm font-medium  
+          }`}
         >
           Ingresar
         </PopoverClose>

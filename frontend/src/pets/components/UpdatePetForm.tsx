@@ -24,9 +24,11 @@ import { PetData } from "../data/pet.data";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui";
 import { Pet } from "../interface/pet.interface";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { usePetMutation } from "../hooks/usePetMutation";
+import axios from "axios";
+import { toast } from "sonner";
+import { PawPrintIcon } from "lucide-react";
 
 export function UpdatePetForm({ pet }: { pet: Pet }) {
   const form = useForm<z.infer<typeof addPetValidation>>({
@@ -37,7 +39,7 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
       sex: pet.sex ?? undefined,
       weight: pet.weight.toString() ?? "0",
       sterilized: pet.sterilized,
-      urlImage: pet.urlImage ?? null,
+      urlImage: null,
       breed: pet.breed ?? null,
       dob_month: pet.dob ? new Date(pet.dob).getMonth().toString() : "",
       dob_year: pet.dob ? new Date(pet.dob).getFullYear().toString() : "",
@@ -49,14 +51,46 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
   const { updatePetMutation } = usePetMutation();
 
   async function onSubmit(values: z.infer<typeof addPetValidation>) {
-    const { weight, dob_month, dob_year, ...rest } = values;
+    const { weight, dob_month, dob_year, urlImage, ...rest } = values;
     const dob = new Date(+dob_year, +dob_month);
+    let res;
+    const data = new FormData();
+    if (urlImage && urlImage.length > 0) {
+      data.append("file", urlImage[0]);
+      data.append(
+        "upload_preset",
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      );
+      data.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+      res = await axios.post(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+        }/image/upload`,
+        data
+      );
+    }
     updatePetMutation.mutate({
-      pet: { weight: +weight, dob, ...rest },
+      pet: {
+        weight: +weight,
+        dob,
+        urlImage: res?.data.secure_url || pet.urlImage,
+        ...rest,
+      },
       id: pet.id,
     });
+
+    if (updatePetMutation.isError) {
+      toast.error("Error al actualizar la mascota", {
+        description: "No se pudo actualizar la mascota",
+        icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+      });
+      return;
+    }
+    toast.success("Mascota actualizada", {
+      description: " La mascota ha sido actualizada correctamente",
+      icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+    });
     navigate(`/dashboard/pets/${pet.id}`);
-    toast.success("Mascota actualizada correctamente");
   }
 
   const species = form.watch("species");
@@ -72,15 +106,16 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
           {/* imagen */}
           <div className="flex h-ful flex-col gap-2  text-center items-center ">
             <h2 className="font-semibold"> Imagen de tu mascota</h2>
+
             <img
               src={
-                pet.urlImage
-                  ? pet.urlImage
-                  : urlImage && urlImage.length > 0
+                urlImage && urlImage.length > 0
                   ? URL.createObjectURL(urlImage[0])
+                  : pet.urlImage
+                  ? pet.urlImage
                   : species
-                  ? `/src/assets/images/${species.toLowerCase()}.png`
-                  : `/src/assets/images/none.png`
+                  ? `/src/assets/images/${species.toLowerCase()}.jpg`
+                  : `/src/assets/images/none.jpg`
               }
               alt="Imagen de la mascota"
               className="h-50 w-50 rounded-lg object-cover "
@@ -367,13 +402,17 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
             <div className="flex flex-row gap-2 space-y-2 ">
               <Button
                 type="submit"
-                className="bg-rose-500"
+                variant={"default"}
                 onClick={(e) => {
                   e.preventDefault();
                   form.handleSubmit(onSubmit)();
                 }}
               >
-                Actualizar
+                {updatePetMutation.isPending ? (
+                  <div className="animate-spin h-5 w-5 border-4 border-t-transparent rounded-full"></div>
+                ) : (
+                  "Actualizar"
+                )}
               </Button>
             </div>
           </div>

@@ -70,33 +70,32 @@ export const usePetMutation = () => {
   const updatePetMutation = useMutation({
     mutationFn: updatePetAction,
     onMutate: async (data) => {
-      console.log("onMutate", data);
-
       const optimisticPet = {
-        ...data.pet,
+        ...data,
+        id: Date.now(),
       };
 
       queryClient.setQueryData(["pets", {}], (oldData: any) => {
         if (oldData) {
-          return [oldData.map];
+          return [...oldData, optimisticPet];
         }
         return [optimisticPet];
       });
-      queryClient.setQueryData(["pet", { petId: optimisticPet.id }], () => {
-        return optimisticPet;
-      });
-      return optimisticPet;
+
+      return { optimisticPet };
     },
     onSuccess: (newPet, variables, context) => {
-      queryClient.removeQueries({
-        queryKey: ["pet", { petId: newPet }],
-      });
-      console.log("newPet", newPet);
       queryClient.setQueryData(["pet", { petId: newPet.id }], () => {
         return newPet;
       });
+
       queryClient.setQueryData(["pets", {}], (oldData: any) => {
-        return oldData.map((pet: Pet) => (pet.id === newPet.id ? newPet : pet));
+        if (!oldData) {
+          return [];
+        }
+        return oldData.map((insertedPet: Pet) => {
+          return insertedPet.id === newPet.id ? newPet : insertedPet;
+        });
       });
     },
     onError: (error, variables, context) => {

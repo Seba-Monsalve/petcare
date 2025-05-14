@@ -1,8 +1,5 @@
-import { usePetStore } from "@/store/pet.store";
 import { UpdatePetForm } from "../components/UpdatePetForm";
 import { Link, useParams } from "react-router";
-import { useEffect, useState } from "react";
-import { Pet } from "../interface/pet.interface";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/common/components/Loading";
@@ -24,10 +21,7 @@ export const UpdatePetPage = () => {
           No pudimos encontrar la información de la mascota solicitada.
         </p>
         <Link to="/dashboard/">
-          <Button
-            variant="outline"
-            className="bg-rose-500 text-white cursorpointer"
-          >
+          <Button variant="outline" className=" text-white cursorpointer">
             Volver al listado de mascotas
           </Button>
         </Link>

@@ -13,7 +13,7 @@ export const Footer = () => {
           © {new Date().getFullYear()} PetCare. Todos los derechos reservados.
         </p>
         <div className="flex gap-4">
-          <Link
+          {/* <Link
             to="#"
             className="text-sm text-muted-foreground underline underline-offset-4"
           >
@@ -30,7 +30,7 @@ export const Footer = () => {
             className="text-sm text-muted-foreground underline underline-offset-4"
           >
             Cookies
-          </Link>
+          </Link> */}
         </div>
       </div>
     </footer>
