@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import { PawPrintIcon as Paw } from "lucide-react";
 
 export const Footer = () => {

@@ -1,19 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router";
-import {
-  PawPrintIcon as Paw,
-  Heart,
-  Shield,
-  Calendar,
-  CheckCircle,
-  ArrowRight,
-  Copy,
-  PawPrintIcon,
-} from "lucide-react";
+import { PawPrintIcon } from "lucide-react";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "@/components/Footer";
-import { DialogClose } from "@radix-ui/react-dialog";
 import {
   Dialog,
   DialogContent,
@@ -23,14 +12,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@radix-ui/react-label";
 import { RegisterForm } from "@/auth/components/RegisterForm";
-import { useAuthStore } from "@/store/auth.store";
 import { useState } from "react";
-import { set } from "date-fns";
 
 export default function Home() {
-  const [message, setmessage] = useState(null);
+  const [message, setmessage] = useState<string | null>(null);
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />

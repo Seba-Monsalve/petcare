@@ -26,7 +26,7 @@ export const usePetMutation = () => {
 
       return { optimisticPet };
     },
-    onSuccess: (newPet, variables, context) => {
+    onSuccess: (newPet, _, context) => {
       queryClient.removeQueries({
         queryKey: ["pets", context.optimisticPet.id],
       });
@@ -42,7 +42,7 @@ export const usePetMutation = () => {
         });
       });
     },
-    onError: (error, variables, context) => {
+    onError: (_, __, context) => {
       //Invalidate and refetch
       // queryClient.invalidateQueries({
       //   queryKey: ["Pets", { filterKey: data.category }],
@@ -84,7 +84,7 @@ export const usePetMutation = () => {
 
       return { optimisticPet };
     },
-    onSuccess: (newPet, variables, context) => {
+    onSuccess: (newPet, _, __) => {
       queryClient.setQueryData(["pet", { petId: newPet.id }], () => {
         return newPet;
       });
@@ -98,7 +98,7 @@ export const usePetMutation = () => {
         });
       });
     },
-    onError: (error, variables, context) => {
+    onError: (_, __, ___) => {
       queryClient.setQueryData(["pets", {}], (oldData: any) => {
         return oldData.map((pet: Pet) => pet);
       });
@@ -110,7 +110,7 @@ export const usePetMutation = () => {
     onMutate: async (id) => {
       return id;
     },
-    onSuccess: (newPet, variables, context) => {
+    onSuccess: (_, __, context) => {
       //Invalidate and refetch
       // queryClient.invalidateQueries({
       //   // queryKey: ["pets", { filterKey: data.category }],
@@ -133,7 +133,7 @@ export const usePetMutation = () => {
         }
       );
     },
-    onError: (error, variables, context) => {
+    onError: (_, __, ___) => {
       //Invalidate and refetch
       // queryClient.invalidateQueries({
       //   queryKey: ["Pets", { filterKey: data.category }],

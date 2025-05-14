@@ -6,11 +6,10 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { RegisterForm } from "../components/RegisterForm";
 
 export default function RegisterPage() {
-  const navigate = useNavigate();
   return (
     <div className=" flex  flex-col h-screen w-full">
       <div className="flex flex-col text-center items-center justify-center py-2">

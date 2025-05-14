@@ -23,7 +23,6 @@ import { z } from "zod";
 import { usePetMutation } from "../hooks";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { months_ES } from "@/common/data/date.data";
-import { VaccinationHistory } from "./VaccinationHistory";
 
 export const AddMedicalRecordForm = ({ pet }: { pet: any }) => {
   const form = useForm<z.infer<typeof addMedicalRecordSchema>>({
