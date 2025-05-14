@@ -16,6 +16,7 @@ import { registerFormSchema } from "@/auth/validation/";
 import { useAuthStore } from "@/store/auth.store";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { PawPrintIcon } from "lucide-react";
 
 export function RegisterForm() {
   const { signUp, error, user } = useAuthStore();
@@ -34,9 +35,13 @@ export function RegisterForm() {
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
     await signUp({ ...values });
     if (error) {
-      toast("Error al crear el usuario");
+      toast.error("Error al crear el usuario", {
+        icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+      });
     } else {
-      toast("Usuario creado correctamente");
+      toast.success("Usuario creado con exito", {
+        icon: <PawPrintIcon className="h-5 w-5 text-rose-500" />,
+      });
 
       localStorage.setItem("user", JSON.stringify(user));
       navigate("/dashboard");

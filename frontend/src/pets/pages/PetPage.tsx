@@ -88,7 +88,7 @@ export const PetPage = () => {
               <AvatarImage
                 src={
                   pet.urlImage ||
-                  `/src/assets/images/${pet.species.toLowerCase()}.jpg`
+                  `assets/images/${pet.species.toLowerCase()}.jpg`
                 }
                 alt={pet.name}
                 className="object-cover"

@@ -137,7 +137,7 @@ export default function PetsPage() {
                               <AvatarImage
                                 src={
                                   pet.urlImage ||
-                                  `/src/assets/images/${pet.species.toLowerCase()}.jpg`
+                                  `assets/images/${pet.species.toLowerCase()}.jpg`
                                 }
                                 className="object-cover rounded-full"
                                 alt={pet.name}

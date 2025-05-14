@@ -65,7 +65,7 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-center ">
                 <img
-                  src="./src/assets/images/home_img.png"
+                  src="/assets/images/home_img.png"
                   alt="Perro y gato felices"
                   className="rounded-2xl object-cover shadow-md"
                 />

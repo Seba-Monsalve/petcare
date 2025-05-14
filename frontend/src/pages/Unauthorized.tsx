@@ -6,7 +6,7 @@ export const Unauthorized = () => {
   return (
     <div className="flex flex-row h-full items-center justify-center from-gray-100 to-gray-300">
       <img
-        src="./src/assets/images/unauthorized.png"
+        src="/assets/images/unauthorized.png"
         alt="Unauthorized Access"
         className="rounded-2xl object-cover shadow-lg w-3/4 max-w-md"
       />
