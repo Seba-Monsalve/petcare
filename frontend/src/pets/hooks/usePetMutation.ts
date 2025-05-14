@@ -91,7 +91,7 @@ export const usePetMutation = () => {
 
       queryClient.setQueryData(["pets", {}], (oldData: any) => {
         if (!oldData) {
-          return [];
+          return [newPet];
         }
         return oldData.map((insertedPet: Pet) => {
           return insertedPet.id === newPet.id ? newPet : insertedPet;

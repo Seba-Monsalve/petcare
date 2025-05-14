@@ -114,8 +114,8 @@ export function UpdatePetForm({ pet }: { pet: Pet }) {
                   : pet.urlImage
                   ? pet.urlImage
                   : species
-                  ? `assets/images/${species.toLowerCase()}.jpg`
-                  : `assets/images/none.jpg`
+                  ? `/assets/images/${species.toLowerCase()}.jpg`
+                  : `/assets/images/none.jpg`
               }
               alt="Imagen de la mascota"
               className="h-50 w-50 rounded-lg object-cover "

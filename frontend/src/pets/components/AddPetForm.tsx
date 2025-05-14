@@ -101,8 +101,8 @@ export function AddPetForm() {
                 urlImage && urlImage.length > 0
                   ? URL.createObjectURL(urlImage[0])
                   : species
-                  ? `assets/images/${species.toLowerCase()}.jpg`
-                  : `assets/images/none.jpg`
+                  ? `/assets/images/${species.toLowerCase()}.jpg`
+                  : `/assets/images/none.jpg`
               }
               alt="Imagen de la mascota"
               className="h-50 w-50 rounded-lg object-cover "
